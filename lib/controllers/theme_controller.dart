@@ -44,7 +44,7 @@ class ThemeNotifier extends ChangeNotifier {
 
   loadFromPrefs() async {
     await _initPrefs();
-    _darkTheme = prefs!.getBool(key) ?? true;
+    _darkTheme = prefs!.getBool(key) ?? false;
     notifyListeners();
   }
 
