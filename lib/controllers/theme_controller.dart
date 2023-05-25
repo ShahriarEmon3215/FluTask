@@ -2,20 +2,33 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 ThemeData light = ThemeData(
-    brightness: Brightness.light,
-    primarySwatch: Colors.indigo,
-    buttonTheme: ButtonThemeData(
-      buttonColor: Colors.indigo,
-      textTheme: ButtonTextTheme.primary,
-    ),
-    scaffoldBackgroundColor: Color(0xfff1f1f1));
+  //brightness: Brightness.light,
+  useMaterial3: true,
+  primarySwatch: Colors.indigo,
+  textTheme: TextTheme(
+      displayLarge: TextStyle(
+          fontSize: 30, fontWeight: FontWeight.bold, color: Colors.indigo),
+      displayMedium: TextStyle(
+          fontSize: 15, fontWeight: FontWeight.bold, color: Colors.indigo)),
+  buttonTheme: ButtonThemeData(
+    buttonColor: Colors.indigo,
+    textTheme: ButtonTextTheme.primary,
+  ),
+);
 
 ThemeData dark = ThemeData(
   useMaterial3: true,
-  brightness: Brightness.dark,
+  //brightness: Brightness.dark,
   primarySwatch: Colors.indigo,
+  textTheme: TextTheme(
+    displayLarge: TextStyle(
+        fontSize: 30, fontWeight: FontWeight.bold, color: Colors.indigo),
+    displayMedium: TextStyle(
+        fontSize: 18, fontWeight: FontWeight.bold, color: Colors.indigo),
+  ),
+
   buttonTheme: ButtonThemeData(
-    buttonColor: Colors.red,
+    buttonColor: Colors.white,
     textTheme: ButtonTextTheme.primary,
   ),
 );
@@ -44,6 +57,7 @@ class ThemeNotifier extends ChangeNotifier {
 
   loadFromPrefs() async {
     await _initPrefs();
+    prefs!.getBool(key) ?? await prefs!.setBool(key, true); 
     _darkTheme = prefs!.getBool(key) ?? false;
     notifyListeners();
   }
