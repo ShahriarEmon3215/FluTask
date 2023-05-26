@@ -10,6 +10,7 @@ enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 class AuthProvider with ChangeNotifier {
   Status _status = Status.Uninitialized;
   String? _token;
+  String? userRole = "";
   NotificationText? _notification = NotificationText('');
 
   Status? get status => _status;
@@ -159,5 +160,10 @@ class AuthProvider with ChangeNotifier {
 
     SharedPreferences storage = await SharedPreferences.getInstance();
     await storage.clear();
+  }
+
+  setUserRole(String? value) {
+    userRole = value;
+    notifyListeners();
   }
 }

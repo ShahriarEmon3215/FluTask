@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../controllers/auth_controller.dart';
 import '../helpers/styles/styles.dart';
 import '../helpers/utils/validate.dart';
+import '../widgets/divider.dart';
 import '../widgets/notification_text.dart';
 import '../widgets/styled_flat_button.dart';
 
@@ -43,68 +44,71 @@ class LogInFormState extends State<LogInForm> {
     if (form!.validate()) {
       await Provider.of<AuthProvider>(context, listen: false)
           .login(email!, password!);
-    }
+    } 
   }
 
   @override
   Widget build(BuildContext context) {
     return Form(
       key: _formKey,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Text(
-            'FluTask',
-            textAlign: TextAlign.center,
-            style: Theme.of(context).textTheme.displayLarge,
-          ),
-          SizedBox(height: 10.0),
-          Consumer<AuthProvider>(
-            builder: (context, provider, child) =>
-                provider.notification ?? NotificationText(''),
-          ),
-          SizedBox(height: 30.0),
-          _userTextField(),
-          _divider(),
-          _passwordTextField(),
-          SizedBox(height: 15.0),
-          StyledFlatButton(
-            'LOGIN IN',
-            onPressed: submit,
-          ),
-          SizedBox(height: 20.0),
-          Center(
-            child: RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: "Don't have an account? ",
-                    style: Styles.p,
-                  ),
-                  TextSpan(
-                    text: 'Register.',
-                    style: Styles.p.copyWith(color: Colors.blue[500]),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () => Navigator.pushNamed(context, '/register'),
-                  ),
-                ],
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'FluTask',
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.displayLarge,
+            ),
+            SizedBox(height: 10.0),
+            Consumer<AuthProvider>(
+              builder: (context, provider, child) =>
+                  provider.notification ?? NotificationText(''),
+            ),
+            SizedBox(height: 30.0),
+            _userTextField(),
+            divider(),
+            _passwordTextField(),
+            SizedBox(height: 15.0),
+            StyledFlatButton(
+              'LOGIN IN',
+              onPressed: submit,
+            ),
+            SizedBox(height: 20.0),
+            Center(
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: "Don't have an account? ",
+                      style: Styles.p,
+                    ),
+                    TextSpan(
+                      text: 'Register.',
+                      style: Styles.p.copyWith(color: Colors.blue[500]),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap =
+                            () => Navigator.pushNamed(context, '/register'),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          SizedBox(height: 5.0),
-          Center(
-            child: RichText(
-              text: TextSpan(
-                text: 'Forgot Your Password?',
-                style: Styles.p.copyWith(color: Colors.blue[500]),
-                recognizer: TapGestureRecognizer()
-                  ..onTap =
-                      () => Navigator.pushNamed(context, '/password-reset'),
+            SizedBox(height: 15.0),
+            Center(
+              child: RichText(
+                text: TextSpan(
+                  text: 'Forgot Your Password?',
+                  style: Styles.p.copyWith(color: Colors.blue[500]),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap =
+                        () => Navigator.pushNamed(context, '/password-reset'),
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -129,14 +133,6 @@ class LogInFormState extends State<LogInForm> {
             password = value!.trim();
             return Validate.requiredField(value, 'Password is required.');
           }),
-    );
-  }
-
-  Container _divider() {
-    return Container(
-      width: double.infinity,
-      height: 1,
-      color: Colors.black26,
     );
   }
 

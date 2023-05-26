@@ -5,7 +5,7 @@ class Styles {
 
   static TextStyle h1 = defaultStyle.copyWith(
     fontWeight: FontWeight.bold,
-    fontSize: 30.0,
+    fontSize: 28.0,
   );
 
   static TextStyle p =

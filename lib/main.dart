@@ -1,5 +1,6 @@
 import 'package:flutask/controllers/auth_controller.dart';
 import 'package:flutask/controllers/language_controller.dart';
+import 'package:flutask/views/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -47,7 +48,7 @@ class MyApp extends StatelessWidget {
            routes: {
             '/': (context) => Router(),
             '/login': (context) => LogIn(),
-            // '/register': (context) => Register(),
+            '/register': (context) => Register(),
             // '/password-reset': (context) => PasswordReset(),
           },
       
