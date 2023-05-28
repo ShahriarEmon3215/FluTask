@@ -16,9 +16,9 @@ class AuthProvider with ChangeNotifier {
   Status? get status => _status;
   String? get token => _token!;
   NotificationText? get notification =>
-      _notification ?? NotificationText('Authenticating... plese wait');
+      _notification ?? NotificationText('adsf');
 
-  final String api = 'https://laravelreact.com/api/v1/auth';
+  final String api = 'http://10.0.2.2:2023/api/user';
 
   initAuthProvider() async {
     String? token = await getToken();
@@ -33,26 +33,26 @@ class AuthProvider with ChangeNotifier {
 
   Future<bool> login(String email, String password) async {
     _status = Status.Authenticating;
-    _notification = null;
+    _notification = NotificationText("Authenticating....");
     notifyListeners();
 
-    final url = "$api/login";
+    var url = "http://10.0.2.2:2023/api/user/login";
 
-    Map<String, String> body = {
-      'email': email,
-      'password': password,
-    };
+    var headers = {"Content-Type": "application/json"};
+    var body = {"email": email, "password": password};
 
     final response = await http.post(
       Uri.parse(url),
-      body: body,
+      headers: headers,
+      body: json.encode(body),
     );
 
     if (response.statusCode == 200) {
       Map<String, dynamic> apiResponse = json.decode(response.body);
       _status = Status.Authenticated;
-      _token = apiResponse['access_token'];
+      _token = apiResponse['token'];
       await storeUserData(apiResponse);
+      _notification = NotificationText("Login successful.");
       notifyListeners();
       return true;
     }
@@ -140,8 +140,8 @@ class AuthProvider with ChangeNotifier {
 
   storeUserData(apiResponse) async {
     SharedPreferences storage = await SharedPreferences.getInstance();
-    await storage.setString('token', apiResponse['access_token']);
-    await storage.setString('name', apiResponse['user']['name']);
+    await storage.setString('token', apiResponse['token']);
+    //await storage.setString('name', apiResponse['user']['name']);
   }
 
   Future<String?>? getToken() async {
