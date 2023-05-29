@@ -36,7 +36,7 @@ class AuthProvider with ChangeNotifier {
     _notification = NotificationText("Authenticating....");
     notifyListeners();
 
-    var url = "http://10.0.2.2:2023/api/user/login";
+    var url = "$api/login";
 
     var headers = {"Content-Type": "application/json"};
     var body = {"email": email, "password": password};
@@ -72,21 +72,21 @@ class AuthProvider with ChangeNotifier {
 
   Future<Map> register(String name, String email, String password,
       String passwordConfirm) async {
-    final url = "$api/register";
-
-    Map<String, String> body = {
-      'name': name,
-      'email': email,
-      'password': password,
-      'password_confirmation': passwordConfirm,
-    };
+    final url = "$api/createUser";
 
     Map<String, dynamic> result = {
       "success": false,
       "message": 'Unknown error.'
     };
 
-    final response = await http.post(Uri.parse(url), body: body);
+    var headers = {"Content-Type": "application/json"};
+    var body = {"username": name, "email": email, "password": password};
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: headers,
+      body: json.encode(body),
+    );
 
     if (response.statusCode == 200) {
       _notification = NotificationText(
@@ -100,16 +100,9 @@ class AuthProvider with ChangeNotifier {
     Map apiResponse = json.decode(response.body);
 
     if (response.statusCode == 422) {
-      if (apiResponse['errors'].containsKey('email')) {
-        result['message'] = apiResponse['errors']['email'][0];
-        return result;
-      }
-
-      if (apiResponse['errors'].containsKey('password')) {
-        result['message'] = apiResponse['errors']['password'][0];
-        return result;
-      }
-
+      result['message'] = apiResponse['error'];
+      _notification = NotificationText(apiResponse['error'], type: 'info');
+      notifyListeners();
       return result;
     }
 

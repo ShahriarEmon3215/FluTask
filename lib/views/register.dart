@@ -86,10 +86,7 @@ class RegisterFormState extends State<RegisterForm> {
             _passwordField(),
             divider(),
             _confirmPasswordField(),
-            SizedBox(height: 10),
-            Text("Register as user role"),
-            _roleSelection(),
-            SizedBox(height: 15.0),
+            SizedBox(height: 40),
             StyledFlatButton(
               'Register',
               onPressed: submit,
