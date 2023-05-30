@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../helpers/styles/styles.dart';
+import 'package:progress_loading_button/progress_loading_button.dart';
 
 class StyledFlatButton extends StatelessWidget {
   final String? text;
@@ -12,20 +11,22 @@ class StyledFlatButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Theme.of(context).primaryColor,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(15))),
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 18.0),
-        child: Text(
-          this.text!,
-          style: Theme.of(context).textTheme.displayMedium!.copyWith(color: Colors.white),
-        ),
+    return LoadingButton(
+      defaultWidget: Text(
+        this.text!,
+        style: Theme.of(context)
+            .textTheme
+            .displayMedium!
+            .copyWith(color: Colors.white),
       ),
-      onPressed: () {
-        this.onPressed();
+      width: 196,
+      height: 60,
+      borderRadius: 20,
+      animate: true,
+      loadingWidget: const CircularProgressIndicator(color: Colors.white),
+      color: Theme.of(context).primaryColor,
+      onPressed: () async {
+        await this.onPressed();
       },
     );
   }

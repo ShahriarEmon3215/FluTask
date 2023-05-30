@@ -6,7 +6,6 @@ import '../controllers/auth_controller.dart';
 import '../helpers/styles/styles.dart';
 import '../helpers/utils/validate.dart';
 import '../widgets/divider.dart';
-import '../widgets/notification_text.dart';
 import '../widgets/styled_flat_button.dart';
 
 class LogIn extends StatelessWidget {
@@ -43,8 +42,8 @@ class LogInFormState extends State<LogInForm> {
     final form = _formKey.currentState;
     if (form!.validate()) {
       await Provider.of<AuthProvider>(context, listen: false)
-          .login(email!, password!);
-    } 
+          .login(email!, password!, context);
+    }
   }
 
   @override
@@ -60,11 +59,6 @@ class LogInFormState extends State<LogInForm> {
               'FluTask',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.displayLarge,
-            ),
-            SizedBox(height: 10.0),
-            Consumer<AuthProvider>(
-              builder: (context, provider, child) =>
-                  provider.notification ?? NotificationText(''),
             ),
             SizedBox(height: 30.0),
             _userTextField(),

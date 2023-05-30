@@ -1,9 +1,10 @@
+import 'dart:io';
+
+import 'package:flutask/widgets/alert_message.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-
-import '../widgets/notification_text.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
@@ -11,12 +12,9 @@ class AuthProvider with ChangeNotifier {
   Status _status = Status.Uninitialized;
   String? _token;
   String? userRole = "";
-  NotificationText? _notification = NotificationText('');
 
   Status? get status => _status;
   String? get token => _token!;
-  NotificationText? get notification =>
-      _notification ?? NotificationText('adsf');
 
   final String api = 'http://10.0.2.2:2023/api/user';
 
@@ -31,41 +29,42 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<bool> login(String email, String password) async {
-    _status = Status.Authenticating;
-    _notification = NotificationText("Authenticating....");
-    notifyListeners();
+  Future<bool> login(
+      String email, String password, BuildContext context) async {
+    bool? connectivity = await checkConnectivity();
+    if (connectivity) {
+      notifyListeners();
+      var url = "$api/login";
 
-    var url = "$api/login";
+      var headers = {"Content-Type": "application/json"};
+      var body = {"email": email, "password": password};
 
-    var headers = {"Content-Type": "application/json"};
-    var body = {"email": email, "password": password};
-
-    final response = await http.post(
-      Uri.parse(url),
-      headers: headers,
-      body: json.encode(body),
-    );
-
-    if (response.statusCode == 200) {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: json.encode(body),
+      );
       Map<String, dynamic> apiResponse = json.decode(response.body);
-      _status = Status.Authenticated;
-      _token = apiResponse['token'];
-      await storeUserData(apiResponse);
-      _notification = NotificationText("Login successful.");
-      notifyListeners();
-      return true;
+
+      if (response.statusCode == 200) {
+        await storeUserData(apiResponse);
+        CustomAlert().messageAlert(
+            message: apiResponse['message'], isError: false, context: context);
+        notifyListeners();
+        return true;
+      }
+
+      if (!apiResponse['success']) {
+        notifyListeners();
+        CustomAlert().messageAlert(
+            message: apiResponse['message'], isError: true, context: context);
+        return false;
+      }
+    } else {
+      CustomAlert().messageAlert(
+          message: "No Internet!", isError: true, context: context);
     }
 
-    if (response.statusCode == 401) {
-      _status = Status.Unauthenticated;
-      _notification = NotificationText('Invalid email or password.');
-      notifyListeners();
-      return false;
-    }
-
-    _status = Status.Unauthenticated;
-    _notification = NotificationText('Server error.');
     notifyListeners();
     return false;
   }
@@ -89,9 +88,6 @@ class AuthProvider with ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      _notification = NotificationText(
-          'Registration successful, please log in.',
-          type: 'info');
       notifyListeners();
       result['success'] = true;
       return result;
@@ -101,7 +97,6 @@ class AuthProvider with ChangeNotifier {
 
     if (response.statusCode == 422) {
       result['message'] = apiResponse['error'];
-      _notification = NotificationText(apiResponse['error'], type: 'info');
       notifyListeners();
       return result;
     }
@@ -122,8 +117,6 @@ class AuthProvider with ChangeNotifier {
     );
 
     if (response.statusCode == 200) {
-      _notification = NotificationText('Reset sent. Please check your inbox.',
-          type: 'info');
       notifyListeners();
       return true;
     }
@@ -145,10 +138,7 @@ class AuthProvider with ChangeNotifier {
 
   logOut([bool tokenExpired = false]) async {
     _status = Status.Unauthenticated;
-    if (tokenExpired == true) {
-      _notification = NotificationText('Session expired. Please log in again.',
-          type: 'info');
-    }
+    if (tokenExpired == true) {}
     notifyListeners();
 
     SharedPreferences storage = await SharedPreferences.getInstance();
@@ -158,5 +148,17 @@ class AuthProvider with ChangeNotifier {
   setUserRole(String? value) {
     userRole = value;
     notifyListeners();
+  }
+
+  Future<bool> checkConnectivity() async {
+    try {
+      final result = await InternetAddress.lookup('www.google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        return true;
+      }
+    } on SocketException catch (_) {
+      return false;
+    }
+    return false;
   }
 }

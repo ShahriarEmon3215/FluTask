@@ -229,6 +229,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.4"
+  progress_loading_button:
+    dependency: "direct main"
+    description:
+      name: progress_loading_button
+      sha256: "75c692224e54fbef3512ccc5da14bd2ff9bdcf02a7aa9d80ddc650354febaba4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.6"
   provider:
     dependency: "direct main"
     description:
