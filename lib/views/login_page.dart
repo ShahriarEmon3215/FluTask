@@ -80,7 +80,8 @@ class LogInFormState extends State<LogInForm> {
                     ),
                     TextSpan(
                       text: 'Register.',
-                      style: Styles.p.copyWith(color: Colors.blue[500]),
+                      style: Styles.p
+                          .copyWith(color: Colors.blue[500], fontSize: 20),
                       recognizer: TapGestureRecognizer()
                         ..onTap =
                             () => Navigator.pushNamed(context, '/register'),
@@ -107,26 +108,35 @@ class LogInFormState extends State<LogInForm> {
     );
   }
 
-  Container _passwordTextField() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 231, 231, 231),
-        borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15)),
-      ),
-      child: TextFormField(
-          obscureText: true,
-          decoration: Styles.input.copyWith(
-            hintText: 'Password',
-            suffixIcon: Icon(Icons.visibility),
-            border: InputBorder.none,
-            focusedBorder: InputBorder.none,
+  Widget _passwordTextField() {
+    return Consumer<AuthProvider>(
+      builder: (context, controller, child) {
+        return Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 231, 231, 231),
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15)),
           ),
-          validator: (value) {
-            password = value!.trim();
-            return Validate.requiredField(value, 'Password is required.');
-          }),
+          child: TextFormField(
+              obscureText: controller.showLoginPassword ? false : true,
+              decoration: Styles.input.copyWith(
+                hintText: 'Password',
+                suffixIcon: IconButton(
+                    onPressed: () => controller.toggleShowPassword("lp"),
+                    icon: Icon(controller.showLoginPassword
+                        ? Icons.visibility_off
+                        : Icons.visibility)),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+              validator: (value) {
+                password = value!.trim();
+                return Validate.requiredField(value, 'Password is required.');
+              }),
+        );
+      },
     );
   }
 

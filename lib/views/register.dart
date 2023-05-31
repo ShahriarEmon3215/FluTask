@@ -42,19 +42,15 @@ class RegisterFormState extends State<RegisterForm> {
   String? passwordConfirm;
   String? message = '';
 
-  Map response = new Map();
+  var response = false;
 
   Future<void> submit() async {
     final form = _formKey.currentState;
     if (form!.validate()) {
       response = await Provider.of<AuthProvider>(context, listen: false)
-          .register(name!, email!, password!, passwordConfirm!);
-      if (response['success']) {
+          .register(name!, email!, password!, passwordConfirm!, context);
+      if (response) {
         Navigator.pop(context);
-      } else {
-        setState(() {
-          message = response['message'];
-        });
       }
     }
   }
@@ -137,73 +133,65 @@ class RegisterFormState extends State<RegisterForm> {
     );
   }
 
-  Container _passwordField() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 231, 231, 231),
-      ),
-      child: TextFormField(
-          obscureText: true,
-          decoration: Styles.input.copyWith(
-            hintText: 'Password',
-            border: InputBorder.none,
-            suffixIcon: Icon(Icons.visibility),
-            focusedBorder: InputBorder.none,
-          ),
-          validator: (value) {
-            password = value!.trim();
-            return Validate.requiredField(value, 'Password is required.');
-          }),
-    );
-  }
-
-  Container _confirmPasswordField() {
-    return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: const Color.fromARGB(255, 231, 231, 231),
-        borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15)),
-      ),
-      child: TextFormField(
-          obscureText: true,
-          decoration: Styles.input.copyWith(
-            hintText: 'Confirm Password',
-            suffixIcon: Icon(Icons.visibility),
-            border: InputBorder.none,
-            focusedBorder: InputBorder.none,
-          ),
-          validator: (value) {
-            passwordConfirm = value!.trim();
-            return Validate.requiredField(
-                value, 'Password confirm is required.');
-          }),
-    );
-  }
-
-  Consumer<AuthProvider> _roleSelection() {
+  Widget _passwordField() {
     return Consumer<AuthProvider>(
-      builder: (context, authProvider, child) {
-        return Column(
-          children: [
-            RadioListTile(
-              value: "ProjectManager",
-              groupValue: authProvider.userRole,
-              onChanged: (value) {
-                authProvider.setUserRole(value);
-              },
-              title: Text("Project Manager"),
-            ),
-            RadioListTile(
-              value: "Employee",
-              groupValue: authProvider.userRole,
-              onChanged: (value) {
-                authProvider.setUserRole(value);
-              },
-              title: Text("Employee"),
-            ),
-          ],
+      builder: (context, controller, child) {
+        return Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 231, 231, 231),
+          ),
+          child: TextFormField(
+              obscureText: controller.showRegisterPassword ? false : true,
+              decoration: Styles.input.copyWith(
+                hintText: 'Password',
+                border: InputBorder.none,
+                suffixIcon: IconButton(
+                  onPressed: () => controller.toggleShowPassword("rp"),
+                  icon: Icon(controller.showRegisterPassword
+                      ? Icons.visibility_off
+                      : Icons.visibility),
+                ),
+                focusedBorder: InputBorder.none,
+              ),
+              validator: (value) {
+                password = value!.trim();
+                return Validate.requiredField(value, 'Password is required.');
+              }),
+        );
+      },
+    );
+  }
+
+  Widget _confirmPasswordField() {
+    return Consumer<AuthProvider>(
+      builder: (context, controller, child) {
+        return Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: const Color.fromARGB(255, 231, 231, 231),
+            borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(15),
+                bottomRight: Radius.circular(15)),
+          ),
+          child: TextFormField(
+              obscureText: controller.showRegiserConfPassword ? false : true,
+              decoration: Styles.input.copyWith(
+                hintText: 'Confirm Password',
+                suffixIcon: IconButton(
+                  onPressed: () => controller.toggleShowPassword("rcp"),
+                  icon: Icon(controller.showRegiserConfPassword
+                      ? Icons.visibility_off
+                      : Icons.visibility),
+                ),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+              ),
+              validator: (value) {
+                passwordConfirm = value!.trim();
+                return Validate.requiredField(
+                    value, 'Password confirm is required.');
+              }),
         );
       },
     );

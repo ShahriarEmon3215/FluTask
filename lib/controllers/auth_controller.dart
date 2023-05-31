@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutask/widgets/alert_message.dart';
 import 'package:flutter/material.dart';
@@ -6,12 +5,16 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import '../widgets/connectivity_checker.dart';
+
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
 class AuthProvider with ChangeNotifier {
   Status _status = Status.Uninitialized;
   String? _token;
-  String? userRole = "";
+  bool showLoginPassword = false;
+  bool showRegisterPassword = false;
+  bool showRegiserConfPassword = false;
 
   Status? get status => _status;
   String? get token => _token!;
@@ -50,11 +53,13 @@ class AuthProvider with ChangeNotifier {
         await storeUserData(apiResponse);
         CustomAlert().messageAlert(
             message: apiResponse['message'], isError: false, context: context);
+        _status = Status.Authenticated;
         notifyListeners();
         return true;
       }
 
       if (!apiResponse['success']) {
+        _status = Status.Unauthenticated;
         notifyListeners();
         CustomAlert().messageAlert(
             message: apiResponse['message'], isError: true, context: context);
@@ -69,60 +74,68 @@ class AuthProvider with ChangeNotifier {
     return false;
   }
 
-  Future<Map> register(String name, String email, String password,
-      String passwordConfirm) async {
-    final url = "$api/createUser";
+  Future register(String name, String email, String password,
+      String passwordConfirm, BuildContext context) async {
+    bool? connectivity = await checkConnectivity();
+    if (connectivity) {
+      final url = "$api/createUser";
 
-    Map<String, dynamic> result = {
-      "success": false,
-      "message": 'Unknown error.'
-    };
+      var headers = {"Content-Type": "application/json"};
+      var body = {"username": name, "email": email, "password": password};
 
-    var headers = {"Content-Type": "application/json"};
-    var body = {"username": name, "email": email, "password": password};
+      final response = await http.post(
+        Uri.parse(url),
+        headers: headers,
+        body: json.encode(body),
+      );
+      debugPrint(response.body);
+      var apiResponse = json.decode(response.body);
 
-    final response = await http.post(
-      Uri.parse(url),
-      headers: headers,
-      body: json.encode(body),
-    );
+      if (response.statusCode == 200) {
+        CustomAlert().messageAlert(
+            message: "Registered successfully, please login now",
+            isError: false,
+            context: context);
+        await Future.delayed(Duration(seconds: 1));
+        _status = Status.Authenticated;
+        notifyListeners();
+        return true;
+      }
 
-    if (response.statusCode == 200) {
-      notifyListeners();
-      result['success'] = true;
-      return result;
-    }
-    debugPrint(response.body);
-    Map apiResponse = json.decode(response.body);
-
-    if (response.statusCode == 422) {
-      result['message'] = apiResponse['error'];
-      notifyListeners();
-      return result;
-    }
-
-    return result;
-  }
-
-  Future<bool> passwordReset(String email) async {
-    final url = "$api/forgot-password";
-
-    Map<String, String> body = {
-      'email': email,
-    };
-
-    final response = await http.post(
-      Uri.parse(url),
-      body: body,
-    );
-
-    if (response.statusCode == 200) {
-      notifyListeners();
-      return true;
+      if (response.statusCode == 422) {
+        CustomAlert().messageAlert(
+            message: apiResponse['message'], isError: true, context: context);
+        _status = Status.Authenticated;
+        notifyListeners();
+        return false;
+      }
+    } else {
+      CustomAlert().messageAlert(
+          message: "No Internet!", isError: true, context: context);
     }
 
     return false;
   }
+
+  // Future<bool> passwordReset(String email) async {
+  //   final url = "$api/forgot-password";
+
+  //   Map<String, String> body = {
+  //     'email': email,
+  //   };
+
+  //   final response = await http.post(
+  //     Uri.parse(url),
+  //     body: body,
+  //   );
+
+  //   if (response.statusCode == 200) {
+  //     notifyListeners();
+  //     return true;
+  //   }
+
+  //   return false;
+  // }
 
   storeUserData(apiResponse) async {
     SharedPreferences storage = await SharedPreferences.getInstance();
@@ -145,20 +158,16 @@ class AuthProvider with ChangeNotifier {
     await storage.clear();
   }
 
-  setUserRole(String? value) {
-    userRole = value;
-    notifyListeners();
-  }
-
-  Future<bool> checkConnectivity() async {
-    try {
-      final result = await InternetAddress.lookup('www.google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        return true;
-      }
-    } on SocketException catch (_) {
-      return false;
+  void toggleShowPassword(String check) {
+    if (check == "lp") {
+      showLoginPassword = !showLoginPassword;
     }
-    return false;
+    if (check == "rp") {
+      showRegisterPassword = !showRegisterPassword;
+    }
+    if (check == "rcp") {
+      showRegiserConfPassword = !showRegiserConfPassword;
+    }
+    notifyListeners();
   }
 }
