@@ -1,15 +1,16 @@
-
 import 'package:flutask/widgets/alert_message.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 
+import '../main.dart';
 import '../widgets/connectivity_checker.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }
 
 class AuthProvider with ChangeNotifier {
+  SharedPreferences? prefs;
   Status _status = Status.Uninitialized;
   String? _token;
   bool showLoginPassword = false;
@@ -22,9 +23,12 @@ class AuthProvider with ChangeNotifier {
   final String api = 'http://10.0.2.2:2023/api/user';
 
   initAuthProvider() async {
+    prefs = await SharedPreferences.getInstance();
     String? token = await getToken();
     if (token != null) {
       _token = token;
+
+      //var status = prefs!.getBool('isLoggedIn') ?? false;
       _status = Status.Authenticated;
     } else {
       _status = Status.Unauthenticated;
@@ -53,6 +57,7 @@ class AuthProvider with ChangeNotifier {
         await storeUserData(apiResponse);
         CustomAlert().messageAlert(
             message: apiResponse['message'], isError: false, context: context);
+        await prefs!.setString('token', apiResponse['token']);
         _status = Status.Authenticated;
         notifyListeners();
         return true;
@@ -144,8 +149,8 @@ class AuthProvider with ChangeNotifier {
   }
 
   Future<String?>? getToken() async {
-    SharedPreferences? storage = await SharedPreferences.getInstance();
-    String? token = storage.getString('token');
+    // SharedPreferences? storage = await SharedPreferences.getInstance();
+    String? token = prefs!.getString('token');
     return token;
   }
 

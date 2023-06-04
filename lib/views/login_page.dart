@@ -61,7 +61,7 @@ class LogInFormState extends State<LogInForm> {
               style: Theme.of(context).textTheme.displayLarge,
             ),
             SizedBox(height: 30.0),
-            _userTextField(),
+            _emailTextField(),
             divider(),
             _passwordTextField(),
             SizedBox(height: 15.0),
@@ -140,7 +140,7 @@ class LogInFormState extends State<LogInForm> {
     );
   }
 
-  Container _userTextField() {
+  Widget _emailTextField() {
     return Container(
       padding: EdgeInsets.all(10),
       decoration: BoxDecoration(
@@ -150,7 +150,7 @@ class LogInFormState extends State<LogInForm> {
       ),
       child: TextFormField(
         decoration: Styles.input.copyWith(
-          hintText: 'User Name',
+          hintText: 'Email',
           border: InputBorder.none,
           focusedBorder: InputBorder.none,
         ),

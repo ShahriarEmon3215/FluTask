@@ -10,13 +10,14 @@ import 'helpers/l10n/l10n.dart';
 import 'views/loading.dart';
 import 'views/login_page.dart';
 
+
 void main() {
-  runApp( MyApp());
+  runApp(MyApp());
 }
 
+
 class MyApp extends StatelessWidget {
-   MyApp({super.key});
- 
+  MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -44,20 +45,17 @@ class MyApp extends StatelessWidget {
             const Locale('en'),
             const Locale('bn'),
           ],
-
-           routes: {
+          routes: {
             '/': (context) => Router(),
             '/login': (context) => LogIn(),
             '/register': (context) => Register(),
             // '/password-reset': (context) => PasswordReset(),
           },
-      
         );
       }),
     );
   }
 }
-
 
 class Router extends StatelessWidget {
   @override
