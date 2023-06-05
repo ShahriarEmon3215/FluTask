@@ -2,6 +2,7 @@ import 'package:flutask/controllers/auth_controller.dart';
 import 'package:flutask/controllers/language_controller.dart';
 import 'package:flutask/views/dashboard_page.dart';
 import 'package:flutask/views/register.dart';
+import 'package:flutask/views/task_plan_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -49,6 +50,7 @@ class MyApp extends StatelessWidget {
             '/login': (context) => LogIn(),
             '/register': (context) => Register(),
             '/dashboard': (context) => DashboardPage(),
+            '/task_plan': (context) => ExampleDragAndDrop(),
           },
         );
       }),

@@ -1,3 +1,5 @@
+import 'package:flutask/helpers/utils/app_space.dart';
+import 'package:flutask/helpers/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -12,6 +14,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     return Scaffold(
+      backgroundColor: AppColors.backColor,
       body: Container(
         height: size.height,
         width: size.width,
@@ -20,6 +23,19 @@ class _DashboardPageState extends State<DashboardPage> {
           child: Column(
             children: [
               kAppBar(),
+              AppSpace.spaceH10,
+              InkWell(
+                onTap: () {
+                  Navigator.pushNamed(context, "/task_plan");
+                },
+                child: Container(
+                  height: 100,
+                  width: size.width,
+                  decoration: BoxDecoration(
+                      color: AppColors.cardColor,
+                      borderRadius: BorderRadius.circular(15)),
+                ),
+              ),
             ],
           ),
         ),
