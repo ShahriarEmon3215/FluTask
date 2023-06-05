@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-
-import '../main.dart';
 import '../widgets/connectivity_checker.dart';
 
 enum Status { Uninitialized, Authenticated, Authenticating, Unauthenticated }

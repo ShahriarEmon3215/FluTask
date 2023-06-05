@@ -1,5 +1,6 @@
 import 'package:flutask/controllers/auth_controller.dart';
 import 'package:flutask/controllers/language_controller.dart';
+import 'package:flutask/views/dashboard_page.dart';
 import 'package:flutask/views/register.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -10,11 +11,9 @@ import 'helpers/l10n/l10n.dart';
 import 'views/loading.dart';
 import 'views/login_page.dart';
 
-
 void main() {
   runApp(MyApp());
 }
-
 
 class MyApp extends StatelessWidget {
   MyApp({super.key});
@@ -49,7 +48,7 @@ class MyApp extends StatelessWidget {
             '/': (context) => Router(),
             '/login': (context) => LogIn(),
             '/register': (context) => Register(),
-            // '/password-reset': (context) => PasswordReset(),
+            '/dashboard': (context) => DashboardPage(),
           },
         );
       }),
@@ -67,11 +66,8 @@ class Router extends StatelessWidget {
             return Loading();
           case Status.Unauthenticated:
             return LogIn();
-          // case Status.Authenticated:
-          //   return ChangeNotifierProvider(
-          //     create: (context) => TodoProvider(authProvider),
-          //     child: Todos(),
-          //   );
+          case Status.Authenticated:
+            return DashboardPage();
           default:
             return LogIn();
         }
