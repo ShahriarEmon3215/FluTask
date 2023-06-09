@@ -68,7 +68,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.backColor,
+      backgroundColor: AppColors.colorThree,
       appBar: _buildAppBar(),
       body: _buildContent(),
     );
@@ -87,7 +87,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
               fontWeight: FontWeight.bold,
             ),
       ),
-      backgroundColor: AppColors.backColor,
+      backgroundColor: AppColors.colorFour,
       elevation: 0,
       actions: [],
     );
@@ -201,7 +201,7 @@ class CustomerCart extends StatelessWidget {
       child: Material(
         elevation: highlighted ? 8.0 : 4.0,
         borderRadius: BorderRadius.circular(22.0),
-        color: highlighted ? AppColors.cardColor : Colors.white,
+        color: highlighted ? AppColors.colorOne : Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 12.0,
@@ -239,7 +239,7 @@ class CustomerCart extends StatelessWidget {
                         child: Container(
                             height: 30,
                             decoration: BoxDecoration(
-                                color: AppColors.cardColor,
+                                color: AppColors.colorTwo,
                                 borderRadius: BorderRadius.circular(10)),
                             child: Center(
                                 child: Text(

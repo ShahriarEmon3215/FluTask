@@ -1,3 +1,4 @@
+import 'package:flutask/controllers/auth_controller.dart';
 import 'package:flutask/controllers/dashbord_controller.dart';
 import 'package:flutask/helpers/utils/app_space.dart';
 import 'package:flutask/helpers/utils/colors.dart';
@@ -16,63 +17,82 @@ class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    var authProvider = Provider.of<AuthProvider>(context, listen: false);
     return Scaffold(
-      backgroundColor: AppColors.backColor,
-      body: Container(
-        height: size.height,
-        width: size.width,
-        // padding: EdgeInsets.all(15),
-        child: Stack(
-          children: [
-            Container(
-              height: size.height,
-              width: size.width,
-              color: Colors.white,
+      backgroundColor: AppColors.colorFour,
+      body: bodyUi(size, context, authProvider),
+      floatingActionButton: bottomFloatButton(),
+    );
+  }
+
+  FloatingActionButton bottomFloatButton() {
+    return FloatingActionButton.extended(
+      onPressed: () {},
+      label: Row(
+        children: [
+          Icon(Icons.create),
+          AppSpace.spaceW4,
+          Text('Create Project'.toUpperCase())
+        ],
+      ),
+    );
+  }
+
+  Widget bodyUi(Size size, BuildContext context, AuthProvider authProvider) {
+    return Container(
+      height: size.height,
+      width: size.width,
+      // padding: EdgeInsets.all(15),
+      child: Stack(
+        children: [
+          Container(
+              height: size.height, width: size.width, color: AppColors.colorFour
               //child: Image.asset("assets/images/bg.jpg"),
-            ),
-            Positioned(
-              bottom: 0,
-              child: Container(
-                height: size.height * 0.62,
-                width: size.width,
-                padding: EdgeInsets.all(15),
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      AppSpace.spaceH16,
-                      Text(
-                        "Projects",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 20),
+              ),
+          Positioned(
+            bottom: 0,
+            child: Container(
+              height: size.height * 0.62,
+              width: size.width,
+              padding: EdgeInsets.all(15),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    AppSpace.spaceH16,
+                    Text(
+                      "Projects",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                    ...[0, 1, 2, 3, 4, 5].map(
+                      (e) => Consumer<DashboardController>(
+                        builder: (context, controller, child) =>
+                            projectCardItem(size),
                       ),
-                      ...[0, 1, 2, 3, 4, 5]
-                          .map((e) => Consumer<DashboardController>(
-                                builder: (context, controller, child) =>
-                                    projectCardItem(size),
-                              ))
-                    ],
-                  ),
+                    ),
+                    AppSpace.spaceH30,
+                  ],
                 ),
               ),
             ),
-            Container(
-              height: size.height * 0.412,
-              padding: EdgeInsets.all(15),
-              decoration: BoxDecoration(
-                  color: AppColors.backColor,
-                  borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(30),
-                      bottomRight: Radius.circular(30))),
-              child: Column(
-                children: [
-                  kAppBar(),
-                  AppSpace.spaceH10,
-                  _topStatusCard(context),
-                ],
-              ),
+          ),
+          Container(
+            height: size.height * 0.412,
+            padding: EdgeInsets.all(15),
+            decoration: BoxDecoration(
+                color: AppColors.colorTwo,
+                borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(30),
+                    bottomRight: Radius.circular(30))),
+            child: Column(
+              children: [
+                kAppBar(authProvider),
+                AppSpace.spaceH10,
+                _topStatusCard(context),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -85,8 +105,7 @@ class _DashboardPageState extends State<DashboardPage> {
       padding: EdgeInsets.all(10),
       alignment: Alignment.bottomCenter,
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
-          color: const Color.fromARGB(255, 243, 243, 243)),
+          borderRadius: BorderRadius.circular(20), color: AppColors.colorThree),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -186,7 +205,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget kAppBar() {
+  Widget kAppBar(AuthProvider authProvider) {
     return Container(
       height: 70,
       child: Row(
@@ -203,7 +222,11 @@ class _DashboardPageState extends State<DashboardPage> {
               subtitle: Text("shahriar3215emon@gmail.com"),
             ),
           ),
-          IconButton(onPressed: () {}, icon: Icon(Icons.settings))
+          IconButton(
+              onPressed: () {
+                authProvider.logOut();
+              },
+              icon: Icon(Icons.settings))
         ],
       ),
     );

@@ -52,10 +52,13 @@ class AuthProvider with ChangeNotifier {
       Map<String, dynamic> apiResponse = json.decode(response.body);
 
       if (response.statusCode == 200) {
+        debugPrint(apiResponse.toString());
         await storeUserData(apiResponse);
         CustomAlert().messageAlert(
             message: apiResponse['message'], isError: false, context: context);
         await prefs!.setString('token', apiResponse['token']);
+        await prefs!.setBool("login_flag", true);
+
         _status = Status.Authenticated;
         notifyListeners();
         return true;
@@ -143,7 +146,9 @@ class AuthProvider with ChangeNotifier {
   storeUserData(apiResponse) async {
     SharedPreferences storage = await SharedPreferences.getInstance();
     await storage.setString('token', apiResponse['token']);
-    //await storage.setString('name', apiResponse['user']['name']);
+    await storage.setInt('user_id', apiResponse['user']['id']);
+    await storage.setString('user_name', apiResponse['user']['username']);
+    await storage.setString('email', apiResponse['user']['email']);
   }
 
   Future<String?>? getToken() async {
@@ -152,13 +157,11 @@ class AuthProvider with ChangeNotifier {
     return token;
   }
 
-  logOut([bool tokenExpired = false]) async {
-    _status = Status.Unauthenticated;
-    if (tokenExpired == true) {}
-    notifyListeners();
-
+  logOut() async {
     SharedPreferences storage = await SharedPreferences.getInstance();
-    await storage.clear();
+    await storage.remove('token');
+    _status = Status.Unauthenticated;
+    notifyListeners();
   }
 
   void toggleShowPassword(String check) {

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static var backColor = fromHex("#C4E8C2");
-  static var cardColor = fromHex("#6BBD99");
+  static var colorOne = fromHex("#46A094");
+  static var colorTwo = fromHex("#6BBD99");
+    static var colorThree = fromHex("#AECFA4");
+  static var colorFour = fromHex("#C4E8C2");
 
   static var green = Colors.green;
 
