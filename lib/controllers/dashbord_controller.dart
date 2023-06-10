@@ -18,4 +18,6 @@ class DashboardController extends ChangeNotifier{
     Color? color = _colorList[random.nextInt(_colorList.length)];
     return color;
   }
+
+  
 }

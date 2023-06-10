@@ -1,3 +1,5 @@
+import 'package:flutask/helpers/shared_preference_helper.dart';
+import 'package:flutask/repositories/auth_repository.dart';
 import 'package:flutask/widgets/alert_message.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -39,16 +41,8 @@ class AuthProvider with ChangeNotifier {
     bool? connectivity = await checkConnectivity();
     if (connectivity) {
       notifyListeners();
-      var url = "$api/login";
-
-      var headers = {"Content-Type": "application/json"};
-      var body = {"email": email, "password": password};
-
-      final response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: json.encode(body),
-      );
+      var response = await AuthRepository().login(email, password);
+      print(response.body.toString());
       Map<String, dynamic> apiResponse = json.decode(response.body);
 
       if (response.statusCode == 200) {
@@ -84,17 +78,8 @@ class AuthProvider with ChangeNotifier {
       String passwordConfirm, BuildContext context) async {
     bool? connectivity = await checkConnectivity();
     if (connectivity) {
-      final url = "$api/createUser";
-
-      var headers = {"Content-Type": "application/json"};
-      var body = {"username": name, "email": email, "password": password};
-
-      final response = await http.post(
-        Uri.parse(url),
-        headers: headers,
-        body: json.encode(body),
-      );
-      debugPrint(response.body);
+      var response = await AuthRepository()
+          .register(name, email, password, passwordConfirm);
       var apiResponse = json.decode(response.body);
 
       if (response.statusCode == 200) {
@@ -143,17 +128,16 @@ class AuthProvider with ChangeNotifier {
   //   return false;
   // }
 
-  storeUserData(apiResponse) async {
-    SharedPreferences storage = await SharedPreferences.getInstance();
-    await storage.setString('token', apiResponse['token']);
-    await storage.setInt('user_id', apiResponse['user']['id']);
-    await storage.setString('user_name', apiResponse['user']['username']);
-    await storage.setString('email', apiResponse['user']['email']);
+  Future<void> storeUserData(apiResponse) async {
+    await SharedPreferencesHelper.setToken(apiResponse['token']);
+    await SharedPreferencesHelper.setLoginUserId(apiResponse['user']['id']);
+    await SharedPreferencesHelper.setLoginUserName(
+        apiResponse['user']['username']);
+    await SharedPreferencesHelper.setEmailAddress(apiResponse['user']['email']);
   }
 
   Future<String?>? getToken() async {
-    // SharedPreferences? storage = await SharedPreferences.getInstance();
-    String? token = prefs!.getString('token');
+    String? token = await SharedPreferencesHelper.getToken();
     return token;
   }
 
