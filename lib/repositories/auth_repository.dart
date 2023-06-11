@@ -26,7 +26,7 @@ class AuthRepository {
   Future register(String name, String email, String password,
       String passwordConfirm) async {
     try {
-      var url = ApiUrl.baseUrl + ApiUrl.loginUrl;
+      var url = ApiUrl.registerUrl;
 
       var headers = {"Content-Type": "application/json"};
       var body = {"username": name, "email": email, "password": password};

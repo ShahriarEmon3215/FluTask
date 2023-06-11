@@ -8,7 +8,7 @@ import 'package:http/http.dart' as http;
 import '../helpers/shared_preference_helper.dart';
 
 class ProjectRepository {
-  Future getProjects() async {
+  Future getProjectsByUserId(int id) async {
     final String? token = await SharedPreferencesHelper.getToken();
     try {
       var headers = {
@@ -16,21 +16,10 @@ class ProjectRepository {
         'Accept': 'application/json',
         'Authorization': 'Bearer $token',
       };
-      // var body = {
-      //   "Limit": 100,
-      //   "Offset": 0,
-      //   "ServerPagination": true,
-      //   "SortName": "CreatedAt",
-      //   "SortOrder": "DESC",
-      //   "Parameters": [
-      //     {"Name": "JobTitle", "Operat": "cn", "Value": jobTitle}
-      //   ]
-      // };
 
-      var response = await http.post(
-        Uri.parse(ApiUrl.baseUrl),
+      var response = await http.get(
+        Uri.parse(ApiUrl.getProjectsByUserId + "$id"),
         headers: headers,
-        //body: json.encode(body),
       );
       debugPrint(response.body.toString());
       return response;
