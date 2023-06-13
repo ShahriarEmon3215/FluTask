@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static var colorOne = fromHex("#46A094");
-  static var colorTwo = fromHex("#6BBD99");
+  static var colorTwo = Color.fromARGB(244, 35, 30, 44);
   static var colorThree = fromHex("#AECFA4");
   static var colorFour = fromHex("#C4E8C2");
 

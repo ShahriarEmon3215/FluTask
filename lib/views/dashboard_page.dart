@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
+import '../models/project_model.dart';
+
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
@@ -18,9 +20,10 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var authProvider = Provider.of<AuthProvider>(context, listen: false);
+    var controller = Provider.of<DashboardController>(context, listen: false);
     return Scaffold(
       backgroundColor: AppColors.colorFour,
-      body: bodyUi(size, context, authProvider),
+      body: bodyUi(size, context, authProvider, controller),
       floatingActionButton: bottomFloatButton(),
     );
   }
@@ -38,7 +41,8 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget bodyUi(Size size, BuildContext context, AuthProvider authProvider) {
+  Widget bodyUi(Size size, BuildContext context, AuthProvider authProvider,
+      DashboardController controller) {
     return Container(
       height: size.height,
       width: size.width,
@@ -50,32 +54,32 @@ class _DashboardPageState extends State<DashboardPage> {
               //child: Image.asset("assets/images/bg.jpg"),
               ),
           Positioned(
-            bottom: 0,
-            child: Container(
-              height: size.height * 0.62,
-              width: size.width,
-              padding: EdgeInsets.all(15),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    AppSpace.spaceH16,
-                    Text(
-                      "Projects",
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                    ),
-                    ...[0, 1, 2, 3, 4, 5].map(
-                      (e) => Consumer<DashboardController>(
-                        builder: (context, controller, child) =>
-                            projectCardItem(size),
+              bottom: 0,
+              child: Consumer<DashboardController>(
+                builder: (context, controller, child) {
+                  return Container(
+                    height: size.height * 0.62,
+                    width: size.width,
+                    padding: EdgeInsets.all(15),
+                    child: SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          AppSpace.spaceH16,
+                          Text(
+                            "Projects",
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 20),
+                          ),
+                          ...controller.projectList.map(
+                            (project) => projectCardItem(size, project),
+                          ),
+                          AppSpace.spaceH30,
+                        ],
                       ),
                     ),
-                    AppSpace.spaceH30,
-                  ],
-                ),
-              ),
-            ),
-          ),
+                  );
+                },
+              )),
           Container(
             height: size.height * 0.412,
             padding: EdgeInsets.all(15),
@@ -97,7 +101,7 @@ class _DashboardPageState extends State<DashboardPage> {
     );
   }
 
-  Widget projectCardItem(Size size) {
+  Widget projectCardItem(Size size, Project project) {
     return Container(
       margin: EdgeInsets.symmetric(vertical: 5),
       width: size.width,
@@ -112,7 +116,7 @@ class _DashboardPageState extends State<DashboardPage> {
           Column(
             children: [
               Text(
-                "FluTask Manage",
+                project.projectName ?? "Undefined Name",
                 style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
               ),
             ],
@@ -148,13 +152,13 @@ class _DashboardPageState extends State<DashboardPage> {
             Row(
               children: [
                 Expanded(
-                  child: _topStatusCardItem(Color.fromRGBO(189, 255, 223, 1),
-                      "12", "Total Contributed"),
+                  child: _topStatusCardItem(
+                      Color.fromRGBO(189, 255, 223, 1), "12", "Total Projects"),
                 ),
                 AppSpace.spaceW10,
                 Expanded(
                   child: _topStatusCardItem(Color.fromRGBO(214, 238, 255, 1),
-                      "6", "Total Completed Projects"),
+                      "6", "Completed Projects"),
                 ),
               ],
             ),
@@ -215,18 +219,27 @@ class _DashboardPageState extends State<DashboardPage> {
               title: Text(
                 "Shahriar Emon",
                 style: TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     fontFamily: "Carter One"),
               ),
-              subtitle: Text("shahriar3215emon@gmail.com"),
+              subtitle: Text(
+                "shahriar3215emon@gmail.com",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
           IconButton(
               onPressed: () {
                 authProvider.logOut();
               },
-              icon: Icon(Icons.settings))
+              icon: Icon(
+                Icons.settings,
+                color: Colors.white,
+              ))
         ],
       ),
     );

@@ -2,7 +2,6 @@ import 'package:flutask/helpers/shared_preference_helper.dart';
 import 'package:flutask/repositories/auth_repository.dart';
 import 'package:flutask/widgets/alert_message.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../widgets/connectivity_checker.dart';
@@ -23,12 +22,8 @@ class AuthProvider with ChangeNotifier {
   final String api = 'http://10.0.2.2:2023/api/user';
 
   initAuthProvider() async {
-    prefs = await SharedPreferences.getInstance();
-    String? token = await getToken();
-    if (token != null) {
-      _token = token;
-
-      //var status = prefs!.getBool('isLoggedIn') ?? false;
+    var isLoggedIn = await SharedPreferencesHelper.getLoginFlag();
+    if (isLoggedIn) {
       _status = Status.Authenticated;
     } else {
       _status = Status.Unauthenticated;
@@ -50,9 +45,7 @@ class AuthProvider with ChangeNotifier {
         await storeUserData(apiResponse);
         CustomAlert().messageAlert(
             message: apiResponse['message'], isError: false, context: context);
-        await prefs!.setString('token', apiResponse['token']);
-        await prefs!.setBool("login_flag", true);
-
+       
         _status = Status.Authenticated;
         notifyListeners();
         return true;

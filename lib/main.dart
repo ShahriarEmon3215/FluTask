@@ -5,6 +5,7 @@ import 'package:flutask/views/dashboard_page.dart';
 import 'package:flutask/views/register.dart';
 import 'package:flutask/views/task_plan_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
@@ -14,6 +15,10 @@ import 'views/loading.dart';
 import 'views/login_page.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      // systemNavigationBarColor: Colors.blue, // navigation bar color
+      //statusBarColor: Color.fromARGB(244, 35, 30, 44), // status bar color
+      statusBarIconBrightness: Brightness.light));
   runApp(MyApp());
 }
 
@@ -28,7 +33,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<LanguageController>(
             create: (_) => LanguageController()),
         ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
-         ChangeNotifierProvider<DashboardController>(create: (_) => DashboardController()),
+        ChangeNotifierProvider<DashboardController>(
+            create: (_) => DashboardController()),
       ],
       child: Consumer2<ThemeNotifier, LanguageController>(
           builder: (context, themeNotifier, languageController, child) {
