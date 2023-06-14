@@ -45,7 +45,7 @@ class AuthProvider with ChangeNotifier {
         await storeUserData(apiResponse);
         CustomAlert().messageAlert(
             message: apiResponse['message'], isError: false, context: context);
-       
+
         _status = Status.Authenticated;
         notifyListeners();
         return true;
@@ -122,6 +122,7 @@ class AuthProvider with ChangeNotifier {
   // }
 
   Future<void> storeUserData(apiResponse) async {
+    await SharedPreferencesHelper.setLoginFlag(true);
     await SharedPreferencesHelper.setToken(apiResponse['token']);
     await SharedPreferencesHelper.setLoginUserId(apiResponse['user']['id']);
     await SharedPreferencesHelper.setLoginUserName(
@@ -135,8 +136,8 @@ class AuthProvider with ChangeNotifier {
   }
 
   logOut() async {
-    SharedPreferences storage = await SharedPreferences.getInstance();
-    await storage.remove('token');
+    await SharedPreferencesHelper.setLoginFlag(false);
+    await SharedPreferencesHelper.setToken('');
     _status = Status.Unauthenticated;
     notifyListeners();
   }
