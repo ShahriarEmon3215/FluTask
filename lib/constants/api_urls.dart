@@ -3,4 +3,5 @@ class ApiUrl {
   static String loginUrl = '${baseUrl}user/login';
   static String registerUrl = '${baseUrl}user/register';
   static String getProjectsByUserId = '${baseUrl}project/getProjectsByUserId/';
+  static String getContributions = '${baseUrl}collaboration/getCollaboration';
 }

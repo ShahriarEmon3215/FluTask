@@ -11,6 +11,7 @@ import '../repositories/project_repository.dart';
 class DashboardController extends ChangeNotifier {
   DashboardController() {
     getProjectList();
+    getContributedProjectsList();
   }
 
   final List<Color> _colorList = [
@@ -32,7 +33,6 @@ class DashboardController extends ChangeNotifier {
   List<Project> projectList = [];
   Future getProjectList() async {
     int? userId = await SharedPreferencesHelper.getLoginUserId();
-    print("user id  $userId");
     var resValue = await ProjectRepository().getProjectsByUserId(userId);
     var bodyMap = json.decode(resValue.body);
     var resCode = resValue.statusCode;
@@ -43,6 +43,26 @@ class DashboardController extends ChangeNotifier {
         projectList.add(Project.fromJson(data));
       }
       print(projectList.length);
+    } else if (resCode == 401) {
+      // CustomAlert().messageAlert(
+      //     message: "Failed to load data", context: context, isError: true);
+    }
+    notifyListeners();
+  }
+
+  List contributedProjectList = [];
+  Future getContributedProjectsList() async {
+    int? userId = await SharedPreferencesHelper.getLoginUserId();
+    var resValue = await ProjectRepository().getContributions(userId);
+    var bodyMap = json.decode(resValue.body);
+    var resCode = resValue.statusCode;
+
+    if (resCode == 200) {
+      contributedProjectList.clear();
+      for (var data in bodyMap['result']) {
+        contributedProjectList.add(data);
+      }
+      print(contributedProjectList.length);
     } else if (resCode == 401) {
       // CustomAlert().messageAlert(
       //     message: "Failed to load data", context: context, isError: true);

@@ -1,3 +1,4 @@
+import 'package:easy_animated_tabbar/easy_animated_tabbar.dart';
 import 'package:flutask/controllers/auth_controller.dart';
 import 'package:flutask/controllers/dashbord_controller.dart';
 import 'package:flutask/helpers/utils/app_space.dart';
@@ -15,16 +16,27 @@ class DashboardPage extends StatefulWidget {
   State<DashboardPage> createState() => _DashboardPageState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
+class _DashboardPageState extends State<DashboardPage>
+    with TickerProviderStateMixin {
+  TabController? _tabController;
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
     var authProvider = Provider.of<AuthProvider>(context, listen: false);
     var controller = Provider.of<DashboardController>(context, listen: false);
-    return Scaffold(
-      backgroundColor: AppColors.colorFour,
-      body: bodyUi(size, context, authProvider, controller),
-      floatingActionButton: bottomFloatButton(),
+    return DefaultTabController(
+      length: 2,
+      child: Scaffold(
+        backgroundColor: AppColors.colorFour,
+        body: bodyUi(size, context, authProvider, controller),
+        floatingActionButton: bottomFloatButton(),
+      ),
     );
   }
 
@@ -64,14 +76,57 @@ class _DashboardPageState extends State<DashboardPage> {
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          AppSpace.spaceH16,
-                          Text(
-                            "Projects",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 20),
+                          AppSpace.spaceH20,
+                          SizedBox(
+                            height: 40,
+                            child: TabBar.secondary(
+                              controller: _tabController,
+                              isScrollable: true,
+                              indicatorSize: TabBarIndicatorSize.tab,
+                              indicator: BoxDecoration(
+                                  color: Color.fromARGB(255, 186, 176, 233),
+                                  borderRadius: BorderRadius.circular(50)),
+                              indicatorPadding: EdgeInsets.zero,
+                              indicatorWeight: 1,
+                              padding: EdgeInsets.zero,
+                              tabs: [
+                                Tab(
+                                  child: Text(
+                                    "My Projects",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Tab(
+                                  child: Text(
+                                    "Contributions",
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                          ...controller.projectList.map(
-                            (project) => projectCardItem(size, project),
+                          AppSpace.spaceH20,
+                          Container(
+                            height: size.height * 0.5,
+                            child: TabBarView(
+                                controller: _tabController,
+                                children: [
+                                  SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        ...controller.projectList.map(
+                                          (project) =>
+                                              projectCardItem(size, project),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Text("data")
+                                ]),
                           ),
                           AppSpace.spaceH30,
                         ],
