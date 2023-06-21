@@ -25,6 +25,18 @@ class _DashboardPageState extends State<DashboardPage>
     _tabController = TabController(length: 2, vsync: this);
   }
 
+  bool? isDataLoaded = false;
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!isDataLoaded!) {
+      var dashboardProvider =
+          Provider.of<DashboardController>(context, listen: false);
+      dashboardProvider.getProjectList(context);
+      dashboardProvider.getContributedProjectsList(context);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -109,7 +121,7 @@ class _DashboardPageState extends State<DashboardPage>
                               ],
                             ),
                           ),
-                          AppSpace.spaceH20,
+                          AppSpace.spaceH4,
                           Container(
                             height: size.height * 0.5,
                             child: TabBarView(
@@ -119,13 +131,21 @@ class _DashboardPageState extends State<DashboardPage>
                                     child: Column(
                                       children: [
                                         ...controller.projectList.map(
+                                          (project) => projectCardItem(size, project),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  SingleChildScrollView(
+                                    child: Column(
+                                      children: [
+                                        ...controller.contributedProjectList.map(
                                           (project) =>
                                               projectCardItem(size, project),
                                         ),
                                       ],
                                     ),
                                   ),
-                                  Text("data")
                                 ]),
                           ),
                           AppSpace.spaceH30,

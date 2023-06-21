@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:math';
 
 import 'package:flutask/helpers/shared_preference_helper.dart';
@@ -7,12 +8,10 @@ import 'package:flutter/material.dart';
 
 import '../models/project_model.dart';
 import '../repositories/project_repository.dart';
+import '../widgets/alert_message.dart';
+import '../widgets/connectivity_checker.dart';
 
 class DashboardController extends ChangeNotifier {
-  DashboardController() {
-    getProjectList();
-    getContributedProjectsList();
-  }
 
   final List<Color> _colorList = [
     Color.fromRGBO(253, 234, 236, 1),
@@ -31,27 +30,43 @@ class DashboardController extends ChangeNotifier {
   }
 
   List<Project> projectList = [];
-  Future getProjectList() async {
-    int? userId = await SharedPreferencesHelper.getLoginUserId();
-    var resValue = await ProjectRepository().getProjectsByUserId(userId);
-    var bodyMap = json.decode(resValue.body);
-    var resCode = resValue.statusCode;
-
-    if (resCode == 200) {
-      projectList.clear();
-      for (var data in bodyMap['result']) {
-        projectList.add(Project.fromJson(data));
+  Future getProjectList(BuildContext context) async {
+    bool? connectivity = await checkConnectivity();
+    if (connectivity) {
+      int? userId = await SharedPreferencesHelper.getLoginUserId();
+      var resValue;
+      try {
+        resValue = await ProjectRepository().getProjectsByUserId(userId);
+      } on SocketException {
+        CustomAlert().messageAlert(
+            message: "Server not found!", context: context, isError: true);
       }
-      print(projectList.length);
-    } else if (resCode == 401) {
-      // CustomAlert().messageAlert(
-      //     message: "Failed to load data", context: context, isError: true);
+
+      var bodyMap = json.decode(resValue.body);
+      var resCode = resValue.statusCode;
+
+      if (resCode == 200) {
+        projectList.clear();
+        for (var data in bodyMap['result']) {
+          projectList.add(Project.fromJson(data));
+        }
+        print(projectList.length);
+      } else if (resCode == 401) {
+        CustomAlert().messageAlert(
+            message: "Failed to load data", context: context, isError: true);
+      } else if (resCode == 400) {
+        CustomAlert().messageAlert(
+            message: "Failed to load data", context: context, isError: true);
+      }
+      notifyListeners();
+    } else {
+      CustomAlert().messageAlert(
+          message: "No internet!", context: context, isError: true);
     }
-    notifyListeners();
   }
 
   List contributedProjectList = [];
-  Future getContributedProjectsList() async {
+  Future getContributedProjectsList(BuildContext context) async {
     int? userId = await SharedPreferencesHelper.getLoginUserId();
     var resValue = await ProjectRepository().getContributions(userId);
     var bodyMap = json.decode(resValue.body);
@@ -60,12 +75,12 @@ class DashboardController extends ChangeNotifier {
     if (resCode == 200) {
       contributedProjectList.clear();
       for (var data in bodyMap['result']) {
-        contributedProjectList.add(data);
+        contributedProjectList.add(Project.fromJson(data));
       }
       print(contributedProjectList.length);
     } else if (resCode == 401) {
-      // CustomAlert().messageAlert(
-      //     message: "Failed to load data", context: context, isError: true);
+      CustomAlert().messageAlert(
+          message: "Failed to load data", context: context, isError: true);
     }
     notifyListeners();
   }
