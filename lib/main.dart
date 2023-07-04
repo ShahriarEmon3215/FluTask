@@ -13,6 +13,7 @@ import 'controllers/theme_controller.dart';
 import 'helpers/l10n/l10n.dart';
 import 'views/loading.dart';
 import 'views/login_page.dart';
+import 'views/project_details_page.dart';
 
 void main() {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -59,6 +60,7 @@ class MyApp extends StatelessWidget {
             '/register': (context) => Register(),
             '/dashboard': (context) => DashboardPage(),
             '/task_plan': (context) => ExampleDragAndDrop(),
+            '/project': (context) => ProjectDetails(),
           },
         );
       }),

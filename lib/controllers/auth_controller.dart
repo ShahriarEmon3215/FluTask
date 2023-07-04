@@ -34,7 +34,8 @@ class AuthProvider with ChangeNotifier {
   Future<bool> login(
       String email, String password, BuildContext context) async {
     bool? connectivity = await checkConnectivity();
-    if (connectivity) {
+   // if (connectivity) {
+    if(true){
       notifyListeners();
       var response = await AuthRepository().login(email, password);
       print(response.body.toString());

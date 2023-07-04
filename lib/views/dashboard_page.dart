@@ -74,7 +74,7 @@ class _DashboardPageState extends State<DashboardPage>
       child: Stack(
         children: [
           Container(
-              height: size.height, width: size.width, color: AppColors.colorFour
+              height: size.height, width: size.width, color: Colors.white,
               //child: Image.asset("assets/images/bg.jpg"),
               ),
           Positioned(
@@ -82,7 +82,7 @@ class _DashboardPageState extends State<DashboardPage>
               child: Consumer<DashboardController>(
                 builder: (context, controller, child) {
                   return Container(
-                    height: size.height * 0.62,
+                    height: size.height * 0.59,
                     width: size.width,
                     padding: EdgeInsets.all(15),
                     child: SingleChildScrollView(
@@ -156,17 +156,18 @@ class _DashboardPageState extends State<DashboardPage>
                 },
               )),
           Container(
-            height: size.height * 0.412,
+            height: size.height * 0.43,
             padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
-                color: AppColors.colorTwo,
+                color: Colors.white,
+                boxShadow: [BoxShadow(offset: Offset(0, 0), blurRadius: 2, spreadRadius: 2, color: const Color.fromARGB(255, 201, 201, 201))],
                 borderRadius: BorderRadius.only(
                     bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30))),
+                    bottomRight: Radius.circular(30),),),
             child: Column(
               children: [
                 kAppBar(authProvider),
-                AppSpace.spaceH10,
+                AppSpace.spaceH20,
                 _topStatusCard(context),
               ],
             ),
@@ -177,41 +178,46 @@ class _DashboardPageState extends State<DashboardPage>
   }
 
   Widget projectCardItem(Size size, Project project) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: 5),
-      width: size.width,
-      height: 100,
-      padding: EdgeInsets.all(10),
-      alignment: Alignment.bottomCenter,
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20), color: AppColors.colorThree),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Column(
-            children: [
-              Text(
-                project.projectName ?? "Undefined Name",
-                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-              ),
-            ],
-          ),
-          Spacer(),
-          SizedBox(
-            height: 50,
-            width: 50,
-            child: SimpleCircularProgressBar(
-              progressStrokeWidth: 10,
-              backStrokeWidth: 5,
-              mergeMode: true,
-              maxValue: 100,
-              valueNotifier: ValueNotifier(50),
-              onGetText: (double value) {
-                return Text('${value.toInt()}%');
-              },
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, '/project');
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(vertical: 5),
+        width: size.width,
+        height: 100,
+        padding: EdgeInsets.all(10),
+        alignment: Alignment.bottomCenter,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(20), color: const Color.fromARGB(255, 245, 245, 245)),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Column(
+              children: [
+                Text(
+                  project.projectName ?? "Undefined Name",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                ),
+              ],
             ),
-          ),
-        ],
+            Spacer(),
+            SizedBox(
+              height: 50,
+              width: 50,
+              child: SimpleCircularProgressBar(
+                progressStrokeWidth: 10,
+                backStrokeWidth: 5,
+                mergeMode: true,
+                maxValue: 100,
+                valueNotifier: ValueNotifier(50),
+                onGetText: (double value) {
+                  return Text('${value.toInt()}%');
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -287,6 +293,7 @@ class _DashboardPageState extends State<DashboardPage>
   Widget kAppBar(AuthProvider authProvider) {
     return Container(
       height: 70,
+      padding: EdgeInsets.only(top: 8),
       child: Row(
         children: [
           Expanded(
@@ -294,7 +301,7 @@ class _DashboardPageState extends State<DashboardPage>
               title: Text(
                 "Shahriar Emon",
                 style: TextStyle(
-                    color: Colors.white,
+                    color: Colors.black87,
                     fontWeight: FontWeight.bold,
                     fontSize: 18,
                     fontFamily: "Carter One"),
@@ -302,7 +309,7 @@ class _DashboardPageState extends State<DashboardPage>
               subtitle: Text(
                 "shahriar3215emon@gmail.com",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: Colors.black54,
                 ),
               ),
             ),
