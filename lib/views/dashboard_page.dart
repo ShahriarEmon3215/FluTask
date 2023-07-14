@@ -1,3 +1,4 @@
+import 'package:app_new_version_check/app_new_version_check.dart';
 import 'package:easy_animated_tabbar/easy_animated_tabbar.dart';
 import 'package:flutask/controllers/auth_controller.dart';
 import 'package:flutask/controllers/dashbord_controller.dart';
@@ -27,14 +28,24 @@ class _DashboardPageState extends State<DashboardPage>
 
   bool? isDataLoaded = false;
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
     if (!isDataLoaded!) {
+      check(context);
       var dashboardProvider =
           Provider.of<DashboardController>(context, listen: false);
-      dashboardProvider.getProjectList(context);
-      dashboardProvider.getContributedProjectsList(context);
+     await dashboardProvider.getProjectList(context);
+     await dashboardProvider.getContributedProjectsList(context);
+     isDataLoaded = true;
     }
+  }
+
+  check(BuildContext context) async {
+    await AppVersion().checkAppUpdate(
+      context: context,
+      applicationPackageId:
+          "com.zamzamit.hishabee", // flutter application package id
+    );
   }
 
   @override
@@ -74,9 +85,9 @@ class _DashboardPageState extends State<DashboardPage>
       child: Stack(
         children: [
           Container(
-              height: size.height, width: size.width, color: Colors.white,
-              //child: Image.asset("assets/images/bg.jpg"),
-              ),
+            height: size.height, width: size.width, color: Colors.white,
+            //child: Image.asset("assets/images/bg.jpg"),
+          ),
           Positioned(
               bottom: 0,
               child: Consumer<DashboardController>(
@@ -131,7 +142,8 @@ class _DashboardPageState extends State<DashboardPage>
                                     child: Column(
                                       children: [
                                         ...controller.projectList.map(
-                                          (project) => projectCardItem(size, project),
+                                          (project) =>
+                                              projectCardItem(size, project),
                                         ),
                                       ],
                                     ),
@@ -139,7 +151,8 @@ class _DashboardPageState extends State<DashboardPage>
                                   SingleChildScrollView(
                                     child: Column(
                                       children: [
-                                        ...controller.contributedProjectList.map(
+                                        ...controller.contributedProjectList
+                                            .map(
                                           (project) =>
                                               projectCardItem(size, project),
                                         ),
@@ -159,11 +172,19 @@ class _DashboardPageState extends State<DashboardPage>
             height: size.height * 0.43,
             padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
-                color: Colors.white,
-                boxShadow: [BoxShadow(offset: Offset(0, 0), blurRadius: 2, spreadRadius: 2, color: const Color.fromARGB(255, 201, 201, 201))],
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(30),
-                    bottomRight: Radius.circular(30),),),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                    offset: Offset(0, 0),
+                    blurRadius: 2,
+                    spreadRadius: 2,
+                    color: const Color.fromARGB(255, 201, 201, 201))
+              ],
+              borderRadius: BorderRadius.only(
+                bottomLeft: Radius.circular(30),
+                bottomRight: Radius.circular(30),
+              ),
+            ),
             child: Column(
               children: [
                 kAppBar(authProvider),
@@ -189,7 +210,8 @@ class _DashboardPageState extends State<DashboardPage>
         padding: EdgeInsets.all(10),
         alignment: Alignment.bottomCenter,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20), color: const Color.fromARGB(255, 245, 245, 245)),
+            borderRadius: BorderRadius.circular(20),
+            color: const Color.fromARGB(255, 245, 245, 245)),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [

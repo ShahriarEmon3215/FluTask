@@ -19,7 +19,7 @@ class AuthProvider with ChangeNotifier {
   Status? get status => _status;
   String? get token => _token!;
 
-  final String api = 'http://10.0.2.2:2023/api/user';
+  final String api = 'http://10.0.3.2:8080/api/user';
 
   initAuthProvider() async {
     var isLoggedIn = await SharedPreferencesHelper.getLoginFlag();

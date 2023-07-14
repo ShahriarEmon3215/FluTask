@@ -1,4 +1,4 @@
-# flutask app
+# flutask
 
 A new Flutter project.
 
