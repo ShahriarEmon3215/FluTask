@@ -201,7 +201,7 @@ class _DashboardPageState extends State<DashboardPage>
   Widget projectCardItem(Size size, Project project) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/project');
+        Navigator.pushNamed(context, '/project', arguments: project.id);
       },
       child: Container(
         margin: EdgeInsets.symmetric(vertical: 5),

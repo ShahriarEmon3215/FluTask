@@ -4,4 +4,7 @@ class ApiUrl {
   static String registerUrl = '${baseUrl}user/register';
   static String getProjectsByUserId = '${baseUrl}project/getProjectsByUserId/';
   static String getContributions = '${baseUrl}collaboration/getCollaborationProjects';
+  static String getContributors = '${baseUrl}collaboration/getCollaboratorsByProjectId';
+  static String getUserByEmail = '${baseUrl}user/getUserByEmail';
+ static String createCollaborationUrl = '${baseUrl}collaboration/createCollaboration';
 }

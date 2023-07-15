@@ -1,10 +1,11 @@
 import 'package:flutask/controllers/auth_controller.dart';
 import 'package:flutask/controllers/dashbord_controller.dart';
 import 'package:flutask/controllers/language_controller.dart';
+import 'package:flutask/controllers/project_controller.dart';
 import 'package:flutask/views/dashboard_page.dart';
 import 'package:flutask/views/register.dart';
 import 'package:flutask/views/task_plan_page.dart';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
@@ -36,6 +37,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
         ChangeNotifierProvider<DashboardController>(
             create: (_) => DashboardController()),
+        ChangeNotifierProvider<ProjectController>(
+            create: (_) => ProjectController()),
       ],
       child: Consumer2<ThemeNotifier, LanguageController>(
           builder: (context, themeNotifier, languageController, child) {
