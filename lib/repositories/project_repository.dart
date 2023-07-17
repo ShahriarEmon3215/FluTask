@@ -71,6 +71,27 @@ class ProjectRepository {
     }
   }
 
+    Future getTasks(int projectId) async {
+    final String? token = await SharedPreferencesHelper.getToken();
+    try {
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+      var body = {"project_id": projectId};
+
+      var response = await http.post(
+        Uri.parse(ApiUrl.getTasksUrl),
+        headers: headers,
+        body: json.encode(body),
+      );
+      debugPrint(response.body.toString());
+      return response;
+    } catch (ex) {
+      throw ex;
+    }
+  }
+
   Future getUserByEmail(String email) async {
     final String? token = await SharedPreferencesHelper.getToken();
     try {

@@ -3,8 +3,12 @@ class ApiUrl {
   static String loginUrl = '${baseUrl}user/login';
   static String registerUrl = '${baseUrl}user/register';
   static String getProjectsByUserId = '${baseUrl}project/getProjectsByUserId/';
-  static String getContributions = '${baseUrl}collaboration/getCollaborationProjects';
-  static String getContributors = '${baseUrl}collaboration/getCollaboratorsByProjectId';
+  static String getContributions =
+      '${baseUrl}collaboration/getCollaborationProjects';
+  static String getContributors =
+      '${baseUrl}collaboration/getCollaboratorsByProjectId';
+  static String getTasksUrl = '${baseUrl}task/getTasks';
   static String getUserByEmail = '${baseUrl}user/getUserByEmail';
- static String createCollaborationUrl = '${baseUrl}collaboration/createCollaboration';
+  static String createCollaborationUrl =
+      '${baseUrl}collaboration/createCollaboration';
 }
