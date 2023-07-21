@@ -5,8 +5,8 @@ import 'package:flutask/controllers/project_controller.dart';
 import 'package:flutask/controllers/task_manager_controller.dart';
 import 'package:flutask/views/dashboard_page.dart';
 import 'package:flutask/views/register.dart';
-import 'package:flutask/views/task_manager_view.dart';
 import 'package:flutask/views/task_plan_page.dart';
+import 'package:flutask/views/tasks_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -69,7 +69,7 @@ class MyApp extends StatelessWidget {
             '/dashboard': (context) => DashboardPage(),
             '/task_plan': (context) => ExampleDragAndDrop(),
             '/project': (context) => ProjectDetails(),
-            '/task_manager': (context) => TaskManagerView(),
+            '/tasks': (context) => TasksView(),
           },
         );
       }),

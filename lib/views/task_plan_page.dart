@@ -36,7 +36,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     ),
   ];
 
-  final List<Customer> _people = [
+  List<Customer> _people = [
     Customer(
       name: 'Shahriar Emon',
       imageProvider: const NetworkImage('https://flutter'
@@ -89,7 +89,20 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       ),
       backgroundColor: AppColors.colorFour,
       elevation: 0,
-      actions: [],
+      actions: [
+        IconButton(
+            onPressed: () {
+              _people = [
+                Customer(
+                  name: 'Shahriar Emon',
+                  imageProvider: const NetworkImage('https://flutter'
+                      '.dev/docs/cookbook/img-files/effects/split-check/Avatar1.jpg'),
+                ),
+              ];
+              setState(() {});
+            },
+            icon: Icon(Icons.settings_ethernet)),
+      ],
     );
   }
 

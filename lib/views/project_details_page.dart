@@ -1,3 +1,4 @@
+
 import 'package:flutask/controllers/project_controller.dart';
 import 'package:flutask/helpers/utils/app_space.dart';
 import 'package:flutter/material.dart';
@@ -47,24 +48,48 @@ class _ProjectDetailsState extends State<ProjectDetails> {
             kAppBar(
               showBackButton: true,
               title: "Project",
-            ),
-            AppSpace.spaceH10,
-            ElevatedButton(
-              onPressed: () {
-                showCollaborators(context, size);
+              backPressHandler: () {
+                Navigator.pop(context);
               },
-              child: Text("Collaborators"),
             ),
             AppSpace.spaceH10,
-            ElevatedButton(onPressed: () {}, child: Text("Tasks")),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    showCollaborators(context, size);
+                  },
+                  child: Text("Collaborators"),
+                ),
+                Spacer(),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pushNamed(context, '/task_plan');
+                  },
+                  child: Text("Task Plan"),
+                ),
+              ],
+            ),
             AppSpace.spaceH10,
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/task_manager');
-                },
-                child: Text("Task Plan")),
+            Row(
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                  
+                    Navigator.pushNamed(context, '/tasks');
+                  },
+                  child: Text("Create Task"),
+                ),
+                Spacer(),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Text("Project Settings"),
+                ),
+              ],
+            ),
             AppSpace.spaceH10,
-            ElevatedButton(onPressed: () {}, child: Text("Task Trxn")),
+            Text("Task Board"),
+            AppSpace.spaceH10,
           ],
         ),
       )),

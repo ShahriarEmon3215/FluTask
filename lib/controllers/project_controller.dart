@@ -45,7 +45,7 @@ class ProjectController with ChangeNotifier {
         CustomAlert().messageAlert(
             message: "Failed to load data", context: context, isError: true);
       }
-      notifyListeners();
+      //notifyListeners();
     } else {
       CustomAlert().messageAlert(
           message: "No internet!", context: context, isError: true);
@@ -152,7 +152,7 @@ class ProjectController with ChangeNotifier {
         CustomAlert().messageAlert(
             message: "Failed to load data", context: context, isError: true);
       }
-      notifyListeners();
+      //notifyListeners();
     } else {
       CustomAlert().messageAlert(
           message: "No internet!", context: context, isError: true);

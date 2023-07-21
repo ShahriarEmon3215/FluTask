@@ -2,11 +2,18 @@ import 'package:flutask/helpers/utils/colors.dart';
 import 'package:flutter/material.dart';
 
 class kAppBar extends StatelessWidget {
-   kAppBar({super.key, required this.title, required this.showBackButton, this.actions});
+  kAppBar({
+    super.key,
+    required this.title,
+    required this.showBackButton,
+    this.actions,
+    this.backPressHandler
+  });
 
-   String? title;
-   bool? showBackButton;
-   List<Widget>? actions;
+  String? title;
+  bool? showBackButton;
+  List<Widget>? actions;
+  Function? backPressHandler;
 
   @override
   Widget build(BuildContext context) {
@@ -16,25 +23,34 @@ class kAppBar extends StatelessWidget {
       color: Color.fromRGBO(243, 228, 255, 1),
       child: Row(
         children: [
-          if(showBackButton!)
-          Expanded(
-            flex: 1,
-            child: 
-                Row(
-                  children: [
-                    IconButton(onPressed: (){
-                      Navigator.pop(context);
-                    }, icon: Icon(Icons.arrow_back_ios, color: Colors.black,)),
-                  ],
-                ),
+          if (showBackButton!)
+            Expanded(
+              flex: 1,
+              child: Row(
+                children: [
+                  IconButton(
+                      onPressed: ()=> backPressHandler!(),
+                      icon: Icon(
+                        Icons.arrow_back_ios,
+                        color: Colors.black,
+                      )),
+                ],
               ),
+            ),
+          Expanded(
+              flex: 1,
+              child: Center(
+                  child: Text(
+                title!,
+                style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ))),
           Expanded(
             flex: 1,
-            child: Center(child: Text(title!, style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),))),
-          Expanded(
-            flex: 1,
-            child: Container(
-            ),),
+            child: Container(),
+          ),
         ],
       ),
     );
