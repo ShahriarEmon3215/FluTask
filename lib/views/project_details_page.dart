@@ -1,4 +1,3 @@
-
 import 'package:flutask/controllers/project_controller.dart';
 import 'package:flutask/helpers/utils/app_space.dart';
 import 'package:flutter/material.dart';
@@ -39,61 +38,72 @@ class _ProjectDetailsState extends State<ProjectDetails> {
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
-      body: SafeArea(
-          child: Container(
-        height: size.height,
-        width: size.width,
-        child: Column(
-          children: [
-            kAppBar(
-              showBackButton: true,
-              title: "Project",
-              backPressHandler: () {
-                Navigator.pop(context);
-              },
-            ),
-            AppSpace.spaceH10,
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    showCollaborators(context, size);
-                  },
-                  child: Text("Collaborators"),
-                ),
-                Spacer(),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/task_plan');
-                  },
-                  child: Text("Task Plan"),
-                ),
-              ],
-            ),
-            AppSpace.spaceH10,
-            Row(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                  
-                    Navigator.pushNamed(context, '/tasks');
-                  },
-                  child: Text("Create Task"),
-                ),
-                Spacer(),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: Text("Project Settings"),
-                ),
-              ],
-            ),
-            AppSpace.spaceH10,
-            Text("Task Board"),
-            AppSpace.spaceH10,
-          ],
-        ),
-      )),
+      // body: Container(),
+      body: bodyUi(size, context),
     );
+  }
+
+  Widget bodyUi(Size size, BuildContext context) {
+    return SafeArea(
+        child: Container(
+      height: size.height,
+      width: size.width,
+      child: Column(
+        children: [
+          kAppBar(
+            showBackButton: true,
+            title: "Project",
+            backPressHandler: () {
+              Navigator.pop(context);
+            },
+          ),
+          AppSpace.spaceH10,
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  showCollaborators(context, size);
+                },
+                child: Text("Collaborators"),
+              ),
+              Spacer(),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/task_plan');
+                },
+                child: Text("Task Plan"),
+              ),
+            ],
+          ),
+          AppSpace.spaceH10,
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pushNamed(context, '/tasks');
+                },
+                child: Text("Create Task"),
+              ),
+              Spacer(),
+              ElevatedButton(
+                onPressed: () {},
+                child: Text("Project Settings"),
+              ),
+            ],
+          ),
+          Spacer(),
+          Container(
+            height: size.height * 0.6,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15), color: Colors.amber),
+            child: ListView.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) => Container(),
+            ),
+          )
+        ],
+      ),
+    ));
   }
 
   Future<dynamic> showCollaborators(BuildContext context, Size size) {
