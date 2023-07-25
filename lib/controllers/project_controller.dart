@@ -155,5 +155,6 @@ class ProjectController with ChangeNotifier {
       CustomAlert().messageAlert(
           message: "No internet!", context: context, isError: true);
     }
+    notifyListeners();
   }
 }

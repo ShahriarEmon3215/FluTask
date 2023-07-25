@@ -1,5 +1,6 @@
 import 'package:flutask/controllers/project_controller.dart';
 import 'package:flutask/helpers/utils/app_space.dart';
+import 'package:flutask/models/task_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/user_model.dart';
@@ -27,6 +28,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
     if (!isDataLoaded) {
       controller = Provider.of<ProjectController>(context, listen: false);
       controller!.projectId = ModalRoute.of(context)!.settings.arguments as int;
+      print(controller!.projectId);
       await controller!.getCollaborators(context, controller!.projectId!);
       await controller!.getTasks(context, controller!.projectId!);
       isDataLoaded = true;
@@ -38,8 +40,8 @@ class _ProjectDetailsState extends State<ProjectDetails> {
     var size = MediaQuery.of(context).size;
 
     return Scaffold(
-      // body: Container(),
       body: bodyUi(size, context),
+      floatingActionButton: bottomFloatButton(),
     );
   }
 
@@ -60,50 +62,105 @@ class _ProjectDetailsState extends State<ProjectDetails> {
           AppSpace.spaceH10,
           Row(
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  showCollaborators(context, size);
-                },
-                child: Text("Collaborators"),
-              ),
-              Spacer(),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/task_plan');
-                },
-                child: Text("Task Plan"),
-              ),
+              AppSpace.spaceW10,
+              topCardItem("Collaborators", "assets/images/collaborators.png"),
+              AppSpace.spaceW10,
+              topCardItem("Task Plan", "assets/images/plan.png"),
+              AppSpace.spaceW10,
             ],
           ),
-          AppSpace.spaceH10,
+          AppSpace.spaceH4,
           Row(
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.pushNamed(context, '/tasks');
-                },
-                child: Text("Create Task"),
-              ),
-              Spacer(),
-              ElevatedButton(
-                onPressed: () {},
-                child: Text("Project Settings"),
-              ),
+              AppSpace.spaceW10,
+              topCardItem("Create Task", "assets/images/create.png"),
+              AppSpace.spaceW10,
+              topCardItem("Project Settings", "assets/images/settings.png"),
+              AppSpace.spaceW10,
             ],
           ),
           Spacer(),
-          Container(
-            height: size.height * 0.6,
-            decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15), color: Colors.amber),
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) => Container(),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Align(
+              alignment: Alignment.topLeft,
+              child: Text(
+                "Tasks",
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                    color: Colors.black38),
+              ),
             ),
-          )
+          ),
+          taskListView(size),
         ],
       ),
     ));
+  }
+
+  Widget topCardItem(String label, String imgPath) {
+    return Expanded(
+      child: Card(
+        child: Container(
+          padding: EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(15),
+          ),
+          child: Column(
+            children: [
+              SizedBox(height: 110, width: 110, child: Image.asset(imgPath)),
+              Text(label),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget taskListView(Size size) {
+    return Consumer<ProjectController>(
+      builder: (context, controller, child) => Container(
+        height: size.height * 0.45,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(15),
+            color: const Color.fromARGB(255, 236, 236, 236)),
+        child: ListView.builder(
+          itemCount: controller.tasks.length,
+          itemBuilder: (context, index) {
+            Task task = controller.tasks[index];
+            return taskItem(task);
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget taskItem(Task task) {
+    return Container(
+      height: 70,
+      margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10), color: Colors.white),
+      child: ListTile(
+        leading: CircleAvatar(
+          child: Icon(Icons.play_circle),
+        ),
+        title: Text(
+          task.taskName!,
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black54),
+        ),
+        subtitle: Row(
+          children: [
+            Text(
+              "Created By Shahriar Emon",
+              style: TextStyle(color: Colors.black38),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Future<dynamic> showCollaborators(BuildContext context, Size size) {
@@ -225,6 +282,23 @@ class _ProjectDetailsState extends State<ProjectDetails> {
           );
         });
       },
+    );
+  }
+
+  FloatingActionButton bottomFloatButton() {
+    return FloatingActionButton.extended(
+      onPressed: () {
+        Navigator.pushNamed(context, '/tasks');
+      },
+      label: Row(
+        children: [
+          Icon(
+            Icons.play_circle,
+          ),
+          AppSpace.spaceW10,
+          Text("Task Board"),
+        ],
+      ),
     );
   }
 }

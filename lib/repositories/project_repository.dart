@@ -71,8 +71,9 @@ class ProjectRepository {
     }
   }
 
-    Future getTasks(int projectId) async {
+  Future getTasks(int projectId) async {
     final String? token = await SharedPreferencesHelper.getToken();
+    print(token);
     try {
       var headers = {
         'Content-Type': 'application/json',
@@ -113,7 +114,8 @@ class ProjectRepository {
     }
   }
 
-   Future createCollaboration(CollaborationRequestModel collaborationRequestModel) async {
+  Future createCollaboration(
+      CollaborationRequestModel collaborationRequestModel) async {
     final String? token = await SharedPreferencesHelper.getToken();
     try {
       var headers = {
