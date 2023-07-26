@@ -34,9 +34,9 @@ class _DashboardPageState extends State<DashboardPage>
       check(context);
       var dashboardProvider =
           Provider.of<DashboardController>(context, listen: false);
-     await dashboardProvider.getProjectList(context);
-     await dashboardProvider.getContributedProjectsList(context);
-     isDataLoaded = true;
+      await dashboardProvider.getProjectList(context);
+      await dashboardProvider.getContributedProjectsList(context);
+      isDataLoaded = true;
     }
   }
 
@@ -99,7 +99,6 @@ class _DashboardPageState extends State<DashboardPage>
                     child: SingleChildScrollView(
                       child: Column(
                         children: [
-                          AppSpace.spaceH20,
                           SizedBox(
                             height: 40,
                             child: TabBar.secondary(
@@ -169,7 +168,7 @@ class _DashboardPageState extends State<DashboardPage>
                 },
               )),
           Container(
-            height: size.height * 0.43,
+            height: size.height * 0.39,
             padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: Colors.white,

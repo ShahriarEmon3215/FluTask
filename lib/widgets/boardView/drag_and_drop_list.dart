@@ -43,7 +43,7 @@ class DragAndDropList implements DragAndDropListInterface {
 
   /// The child elements that will be contained in this list.
   /// It is possible to not provide any children when an empty list is desired.
-  final List<DragAndDropItem> children;
+  List<DragAndDropItem> children;
 
   /// Whether or not this item can be dragged.
   /// Set to true if it can be reordered.

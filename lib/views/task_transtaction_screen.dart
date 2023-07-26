@@ -1,10 +1,10 @@
-
 import 'package:flutask/widgets/kAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import '../controllers/task_manager_controller.dart';
+import '../models/task_model.dart';
 import '../widgets/boardView/drag_and_drop_lists.dart';
 
 class TasksView extends StatefulWidget {
@@ -25,10 +25,23 @@ class _TasksViewState extends State<TasksView> {
   }
 
   TaskManagerController? controller;
+  bool isDataLoaded = false;
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+
+    if (!isDataLoaded) {
+      controller = Provider.of<TaskManagerController>(context, listen: false);
+      controller!.tasks =
+          ModalRoute.of(context)!.settings.arguments as List<Task>;
+      controller!.bindTasks();
+      isDataLoaded = true;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    controller = Provider.of<TaskManagerController>(context, listen: false);
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -37,12 +50,12 @@ class _TasksViewState extends State<TasksView> {
               kAppBar(
                 title: "Tasks",
                 showBackButton: true,
-                backPressHandler: () {
-                  Navigator.pop(context);
-                  SystemChrome.setPreferredOrientations([
+                backPressHandler: () async {
+                  await SystemChrome.setPreferredOrientations([
                     DeviceOrientation.portraitDown,
                     DeviceOrientation.portraitUp,
                   ]);
+                  Navigator.pop(context);
                 },
               ),
               Expanded(
@@ -53,7 +66,6 @@ class _TasksViewState extends State<TasksView> {
                 children: controller!.contents!,
                 onItemReorder: _onItemReorder,
                 onListReorder: _onListReorder,
-                
               )),
             ],
           ),

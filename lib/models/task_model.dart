@@ -2,25 +2,31 @@ class Task {
   int? id;
   String? taskName;
   int? projectId;
-  String? startDate;
-  String? endDate;
+  String? userId;
   String? creationDate;
+  String? username;
+  String? status;
+  String? collaborationDate;
 
   Task(
       {this.id,
       this.taskName,
       this.projectId,
-      this.startDate,
-      this.endDate,
-      this.creationDate});
+      this.userId,
+      this.creationDate,
+      this.username,
+      this.status,
+      this.collaborationDate});
 
   Task.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     taskName = json['task_name'];
     projectId = json['project_id'];
-    startDate = json['start_date'];
-    endDate = json['end_date'];
+    userId = json['user_id'];
     creationDate = json['creation_date'];
+    username = json['username'];
+    status = json['status'];
+    collaborationDate = json['collaboration_date'];
   }
 
   Map<String, dynamic> toJson() {
@@ -28,9 +34,11 @@ class Task {
     data['id'] = this.id;
     data['task_name'] = this.taskName;
     data['project_id'] = this.projectId;
-    data['start_date'] = this.startDate;
-    data['end_date'] = this.endDate;
+    data['user_id'] = this.userId;
     data['creation_date'] = this.creationDate;
+    data['username'] = this.username;
+    data['status'] = this.status;
+    data['collaboration_date'] = this.collaborationDate;
     return data;
   }
 }

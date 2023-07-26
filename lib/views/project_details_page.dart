@@ -101,18 +101,34 @@ class _ProjectDetailsState extends State<ProjectDetails> {
 
   Widget topCardItem(String label, String imgPath) {
     return Expanded(
-      child: Card(
-        child: Container(
-          padding: EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(15),
-          ),
-          child: Column(
-            children: [
-              SizedBox(height: 110, width: 110, child: Image.asset(imgPath)),
-              Text(label),
-            ],
+      child: InkWell(
+        onTap: () {
+          if (label == "Collaborators") {
+            showCollaborators(context, MediaQuery.sizeOf(context));
+          } else if (label == "Task Plan") {
+            Navigator.pushNamed(context, '/task_plan');
+          } else if (label == "Create Task") {
+          } else if (label == "Project Settings") {}
+        },
+        child: Card(
+          child: Container(
+            padding: EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15),
+            ),
+            child: Column(
+              children: [
+                SizedBox(height: 110, width: 110, child: Image.asset(imgPath)),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black54,
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -124,15 +140,18 @@ class _ProjectDetailsState extends State<ProjectDetails> {
       builder: (context, controller, child) => Container(
         height: size.height * 0.45,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(15),
-            color: const Color.fromARGB(255, 236, 236, 236)),
-        child: ListView.builder(
-          itemCount: controller.tasks.length,
-          itemBuilder: (context, index) {
-            Task task = controller.tasks[index];
-            return taskItem(task);
-          },
+          borderRadius: BorderRadius.circular(15),
+          color: const Color.fromARGB(255, 236, 236, 236),
         ),
+        child: controller.tasks.length != 0
+            ? ListView.builder(
+                itemCount: controller.tasks.length,
+                itemBuilder: (context, index) {
+                  Task task = controller.tasks[index];
+                  return taskItem(task);
+                },
+              )
+            : Center(child: Text("No tasks")),
       ),
     );
   }
@@ -154,8 +173,13 @@ class _ProjectDetailsState extends State<ProjectDetails> {
         subtitle: Row(
           children: [
             Text(
-              "Created By Shahriar Emon",
-              style: TextStyle(color: Colors.black38),
+              task.status == null
+                  ? task.username != null
+                      ? "Assigned to ${task.username}"
+                      : "Not assigned yet!"
+                  : task.status!,
+              style: TextStyle(
+                  color: task.status == null ? Colors.black38 : Colors.green),
             ),
           ],
         ),
@@ -288,7 +312,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
   FloatingActionButton bottomFloatButton() {
     return FloatingActionButton.extended(
       onPressed: () {
-        Navigator.pushNamed(context, '/tasks');
+        Navigator.pushNamed(context, '/tasks', arguments: controller!.tasks);
       },
       label: Row(
         children: [
