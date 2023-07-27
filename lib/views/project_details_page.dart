@@ -157,6 +157,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
   }
 
   Widget taskItem(Task task) {
+    
     return Container(
       height: 70,
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -311,8 +312,10 @@ class _ProjectDetailsState extends State<ProjectDetails> {
 
   FloatingActionButton bottomFloatButton() {
     return FloatingActionButton.extended(
-      onPressed: () {
-        Navigator.pushNamed(context, '/tasks', arguments: controller!.tasks);
+      onPressed: () async {
+        await Navigator.pushNamed(context, '/tasks',
+            arguments: controller!.tasks);
+        controller!.getTasks(context, controller!.projectId!);
       },
       label: Row(
         children: [

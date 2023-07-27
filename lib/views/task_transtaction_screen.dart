@@ -77,10 +77,31 @@ class _TasksViewState extends State<TasksView> {
   _onItemReorder(
       int oldItemIndex, int oldListIndex, int newItemIndex, int newListIndex) {
     setState(() {
+      /// UI item
       var movedItem =
           controller!.contents![oldListIndex].children.removeAt(oldItemIndex);
+      /// task item
+      var movedTaskItem =
+          controller!.initialTasks[oldListIndex].removeAt(oldItemIndex);
+      /// UI list
       controller!.contents![newListIndex].children
           .insert(newItemIndex, movedItem);
+      /// task list
+      controller!.initialTasks[newListIndex]
+          .insert(newItemIndex, movedTaskItem);
+
+      if (newListIndex == 1) {
+        controller!.updateTaskStatus(context, movedTaskItem.id!, TaskStatus.working.name.toString());
+      }
+      if (newListIndex == 2) {
+        controller!.updateTaskStatus(context, movedTaskItem.id!, TaskStatus.pause.name.toString());
+      }
+      if (newListIndex == 3) {
+        controller!.updateTaskStatus(context, movedTaskItem.id!, TaskStatus.complete.name.toString());
+      }
+      if (newListIndex == 0) {
+        controller!.updateTaskStatus(context, movedTaskItem.id!, null);
+      }
     });
   }
 
