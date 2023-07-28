@@ -2,7 +2,7 @@ class Task {
   int? id;
   String? taskName;
   int? projectId;
-  String? userId;
+  int? userId;
   String? creationDate;
   String? username;
   String? status;

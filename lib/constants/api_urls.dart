@@ -13,4 +13,6 @@ class ApiUrl {
       '${baseUrl}collaboration/createCollaboration';
   static String updateTaskStatusUrl =
       '${baseUrl}task/updateTaskStatus/';
+    static String updateTaskCollaborationUrl =
+      '${baseUrl}task/updateTaskCollatoraion/';
 }

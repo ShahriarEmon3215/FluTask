@@ -1,6 +1,9 @@
+import 'package:flutask/controllers/task_plan_controller.dart';
 import 'package:flutask/helpers/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
+import 'package:provider/provider.dart';
+
+import '../models/task_model.dart';
 
 @immutable
 class ExampleDragAndDrop extends StatefulWidget {
@@ -12,57 +15,42 @@ class ExampleDragAndDrop extends StatefulWidget {
 
 class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
     with TickerProviderStateMixin {
-  List<Item> _items = [
-    Item(
-      name: 'Task One',
-      totalPriceCents: 1299,
-      uid: '1',
-      imageProvider: NetworkImage('https://flutter'
-          '.dev/docs/cookbook/img-files/effects/split-check/Food1.jpg'),
-    ),
-    Item(
-      name: 'Task Two',
-      totalPriceCents: 799,
-      uid: '2',
-      imageProvider: NetworkImage('https://flutter'
-          '.dev/docs/cookbook/img-files/effects/split-check/Food2.jpg'),
-    ),
-    Item(
-      name: 'Task Three',
-      totalPriceCents: 1499,
-      uid: '3',
-      imageProvider: NetworkImage('https://flutter'
-          '.dev/docs/cookbook/img-files/effects/split-check/Food3.jpg'),
-    ),
-  ];
-
-  List<Customer> _people = [
-    Customer(
-      name: 'Shahriar Emon',
-      imageProvider: const NetworkImage('https://flutter'
-          '.dev/docs/cookbook/img-files/effects/split-check/Avatar1.jpg'),
-    ),
-    Customer(
-      name: 'Adman Morshed',
-      imageProvider: const NetworkImage('https://flutter'
-          '.dev/docs/cookbook/img-files/effects/split-check/Avatar2.jpg'),
-    ),
-    Customer(
-      name: 'Shiblee Shahriar',
-      imageProvider: const NetworkImage('https://flutter'
-          '.dev/docs/cookbook/img-files/effects/split-check/Avatar3.jpg'),
-    ),
-  ];
-
   final GlobalKey _draggableKey = GlobalKey();
 
   void _itemDroppedOnCustomerCart({
-    required Item item,
-    required Customer customer,
+    required Task item,
+    required Collaborator collaborator,
   }) {
-    setState(() {
-      customer.items.add(item);
+    controller!.tasks.removeWhere((element) {
+      return element.id == item.id;
     });
+    setState(() {
+      collaborator.items.add(item);
+    });
+    controller!.updateTaskCollaboration(
+        context, item.id!, collaborator.name, collaborator.id);
+  }
+
+  TaskPlanController? controller;
+  bool isDataLoaded = false;
+
+  @override
+  void didChangeDependencies() async {
+    super.didChangeDependencies();
+    if (!isDataLoaded) {
+      controller = Provider.of<TaskPlanController>(context, listen: false);
+      List<dynamic> args = ModalRoute.of(context)!.settings.arguments as List;
+      controller!.tasks.clear();
+      controller!.tasks.addAll(args[0]);
+      controller!.collaborators.clear();
+      args[1].forEach((element) {
+        controller!.collaborators.add(Collaborator(
+          id: element.id,
+          name: element.username,
+        ));
+      });
+      isDataLoaded = true;
+    }
   }
 
   @override
@@ -90,18 +78,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       backgroundColor: AppColors.colorFour,
       elevation: 0,
       actions: [
-        IconButton(
-            onPressed: () {
-              _people = [
-                Customer(
-                  name: 'Shahriar Emon',
-                  imageProvider: const NetworkImage('https://flutter'
-                      '.dev/docs/cookbook/img-files/effects/split-check/Avatar1.jpg'),
-                ),
-              ];
-              setState(() {});
-            },
-            icon: Icon(Icons.settings_ethernet)),
+        IconButton(onPressed: () {}, icon: Icon(Icons.settings_ethernet)),
       ],
     );
   }
@@ -115,7 +92,9 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
               Expanded(
                 child: _buildMenuList(),
               ),
-              Container(height: 300, child: _buildPeopleRow()),
+              Container(
+                  height: MediaQuery.sizeOf(context).height * 0.4,
+                  child: _buildPeopleRow()),
             ],
           ),
         ),
@@ -126,14 +105,14 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   Widget _buildMenuList() {
     return ListView.separated(
       padding: const EdgeInsets.all(16.0),
-      itemCount: _items.length,
+      itemCount: controller!.tasks.length,
       separatorBuilder: (context, index) {
         return const SizedBox(
           height: 12.0,
         );
       },
       itemBuilder: (context, index) {
-        final item = _items[index];
+        final item = controller!.tasks[index];
         return _buildMenuItem(
           item: item,
         );
@@ -142,19 +121,17 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   }
 
   Widget _buildMenuItem({
-    required Item item,
+    required Task item,
   }) {
-    return LongPressDraggable<Item>(
+    return LongPressDraggable<Task>(
       data: item,
       dragAnchorStrategy: pointerDragAnchorStrategy,
       feedback: DraggingListItem(
         dragKey: _draggableKey,
-        title: item.name,
+        title: item.taskName!,
       ),
       child: MenuListItem(
-        name: item.name,
-        price: item.formattedTotalItemPrice,
-        photoProvider: item.imageProvider,
+        name: item.taskName!,
       ),
     );
   }
@@ -167,27 +144,28 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
       ),
       child: ListView(
         scrollDirection: Axis.horizontal,
-        children: _people.map(_buildPersonWithDropZone).toList(),
+        children:
+            controller!.collaborators.map(_buildPersonWithDropZone).toList(),
       ),
     );
   }
 
-  Widget _buildPersonWithDropZone(Customer customer) {
+  Widget _buildPersonWithDropZone(Collaborator user) {
     return Container(
       width: 200,
       margin: EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-      child: DragTarget<Item>(
+      child: DragTarget<Task>(
         builder: (context, candidateItems, rejectedItems) {
           return CustomerCart(
-            hasItems: customer.items.isNotEmpty,
+            hasItems: user.items.isNotEmpty,
             highlighted: candidateItems.isNotEmpty,
-            customer: customer,
+            collaborator: user,
           );
         },
         onAccept: (item) {
           _itemDroppedOnCustomerCart(
             item: item,
-            customer: customer,
+            collaborator: user,
           );
         },
       ),
@@ -198,23 +176,23 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
 class CustomerCart extends StatelessWidget {
   const CustomerCart({
     super.key,
-    required this.customer,
+    required this.collaborator,
     this.highlighted = false,
     this.hasItems = false,
   });
 
-  final Customer customer;
+  final Collaborator collaborator;
   final bool highlighted;
   final bool hasItems;
 
   @override
   Widget build(BuildContext context) {
     return Transform.scale(
-      scale: highlighted ? 1.075 : 1.0,
+      scale: highlighted ? 1.1 : 1.0,
       child: Material(
         elevation: highlighted ? 8.0 : 4.0,
         borderRadius: BorderRadius.circular(22.0),
-        color: highlighted ? AppColors.colorOne : Colors.white,
+        color: highlighted ? Color.fromARGB(255, 179, 231, 181) : Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 12.0,
@@ -223,20 +201,14 @@ class CustomerCart extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Colors.green),
-                child: Text(
-                  customer.name,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Colors.white,
-                        fontWeight:
-                            hasItems ? FontWeight.normal : FontWeight.bold,
-                      ),
-                ),
+              Text(
+                collaborator.name,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Colors.black54,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
+              Divider(),
               Expanded(
                 child: Container(
                   child: Visibility(
@@ -245,19 +217,22 @@ class CustomerCart extends StatelessWidget {
                     maintainAnimation: true,
                     maintainSize: true,
                     child: ListView.builder(
-                      itemCount: customer.items.length,
+                      itemCount: collaborator.items.length,
                       itemBuilder: (context, index) => Card(
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10)),
                         child: Container(
                             height: 30,
                             decoration: BoxDecoration(
-                                color: AppColors.colorTwo,
+                                color: Colors.green,
                                 borderRadius: BorderRadius.circular(10)),
                             child: Center(
                                 child: Text(
-                              customer.items[index].name,
-                              style: TextStyle(fontWeight: FontWeight.bold),
+                              collaborator.items[index].taskName!,
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color:
+                                      const Color.fromARGB(255, 241, 241, 241)),
                             ))),
                       ),
                     ),
@@ -276,14 +251,10 @@ class MenuListItem extends StatelessWidget {
   const MenuListItem({
     super.key,
     this.name = '',
-    this.price = '',
-    required this.photoProvider,
     this.isDepressed = false,
   });
 
   final String name;
-  final String price;
-  final ImageProvider photoProvider;
   final bool isDepressed;
 
   @override
@@ -305,10 +276,10 @@ class MenuListItem extends StatelessWidget {
                 children: [
                   Text(
                     name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontSize: 18.0, fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: const Color.fromARGB(255, 231, 231, 231)),
                   ),
                 ],
               ),
@@ -339,14 +310,14 @@ class DraggingListItem extends StatelessWidget {
         width: MediaQuery.of(context).size.width * 0.8,
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
-            color: Colors.white, borderRadius: BorderRadius.circular(10)),
+            color: Colors.green, borderRadius: BorderRadius.circular(10)),
         height: 50,
         child: Center(
           child: Text(
             title,
             style: TextStyle(
                 decoration: TextDecoration.none,
-                color: Colors.black,
+                color: Colors.white,
                 fontSize: 17),
           ),
         ),
@@ -355,36 +326,13 @@ class DraggingListItem extends StatelessWidget {
   }
 }
 
-@immutable
-class Item {
-  const Item({
-    required this.totalPriceCents,
+class Collaborator {
+  Collaborator({
+    required this.id,
     required this.name,
-    required this.uid,
-    required this.imageProvider,
-  });
-  final int totalPriceCents;
-  final String name;
-  final String uid;
-  final ImageProvider imageProvider;
-  String get formattedTotalItemPrice =>
-      '\$${(totalPriceCents / 100.0).toStringAsFixed(2)}';
-}
-
-class Customer {
-  Customer({
-    required this.name,
-    required this.imageProvider,
-    List<Item>? items,
+    List<Task>? items,
   }) : items = items ?? [];
-
+  final int id;
   final String name;
-  final ImageProvider imageProvider;
-  final List<Item> items;
-
-  String get formattedTotalItemPrice {
-    final totalPriceCents =
-        items.fold<int>(0, (prev, item) => prev + item.totalPriceCents);
-    return '\$${(totalPriceCents / 100.0).toStringAsFixed(2)}';
-  }
+  final List<Task> items;
 }

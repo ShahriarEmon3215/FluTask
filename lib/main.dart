@@ -3,6 +3,7 @@ import 'package:flutask/controllers/dashbord_controller.dart';
 import 'package:flutask/controllers/language_controller.dart';
 import 'package:flutask/controllers/project_controller.dart';
 import 'package:flutask/controllers/task_manager_controller.dart';
+import 'package:flutask/controllers/task_plan_controller.dart';
 import 'package:flutask/views/dashboard_page.dart';
 import 'package:flutask/views/register.dart';
 import 'package:flutask/views/task_plan_page.dart';
@@ -44,6 +45,8 @@ class MyApp extends StatelessWidget {
             create: (_) => ProjectController()),
         ChangeNotifierProvider<TaskManagerController>(
             create: (_) => TaskManagerController()),
+        ChangeNotifierProvider<TaskPlanController>(
+            create: (_) => TaskPlanController()),
       ],
       child: Consumer2<ThemeNotifier, LanguageController>(
           builder: (context, themeNotifier, languageController, child) {

@@ -103,11 +103,13 @@ class _ProjectDetailsState extends State<ProjectDetails> {
   Widget topCardItem(String label, String imgPath) {
     return Expanded(
       child: InkWell(
-        onTap: () {
+        onTap: () async {
           if (label == "Collaborators") {
             showCollaborators(context, MediaQuery.sizeOf(context));
           } else if (label == "Task Plan") {
-            Navigator.pushNamed(context, '/task_plan');
+            await Navigator.pushNamed(context, '/task_plan',
+                arguments: [controller!.tasks, controller!.collaborators]);
+            controller!.getTasks(context, controller!.projectId!);
           } else if (label == "Create Task") {
           } else if (label == "Project Settings") {}
         },
