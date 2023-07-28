@@ -209,7 +209,7 @@ class TaskManagerController with ChangeNotifier {
     if (connectivity) {
       var resValue;
       try {
-        resValue = await TaskRepository().updateTaskStatus(tId, status!);
+        resValue = await TaskRepository().updateTaskStatus(tId, status);
       } on SocketException {
         CustomAlert().messageAlert(
             message: "Server not found!", context: context, isError: true);

@@ -1,7 +1,5 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
-
 import '../constants/api_urls.dart';
 import '../helpers/shared_preference_helper.dart';
 import 'package:http/http.dart' as http;
@@ -15,7 +13,7 @@ class TaskRepository {
         'Content-Type': 'application/json',
         'Authorization': 'Bearer $token',
       };
-      var body = {"status": status!};
+      var body = {"status": status ?? ""};
 
       var response = await http.post(
         Uri.parse(ApiUrl.updateTaskStatusUrl + taskID.toString()),
