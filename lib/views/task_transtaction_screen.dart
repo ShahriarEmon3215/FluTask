@@ -18,10 +18,10 @@ class _TasksViewState extends State<TasksView> {
   @override
   void initState() {
     super.initState();
-    SystemChrome.setPreferredOrientations([
-      DeviceOrientation.landscapeRight,
-      DeviceOrientation.landscapeLeft,
-    ]);
+    // SystemChrome.setPreferredOrientations([
+    //   DeviceOrientation.landscapeRight,
+    //   DeviceOrientation.landscapeLeft,
+    // ]);
   }
 
   TaskManagerController? controller;
@@ -51,10 +51,10 @@ class _TasksViewState extends State<TasksView> {
                 title: "Tasks",
                 showBackButton: true,
                 backPressHandler: () async {
-                  await SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.portraitDown,
-                    DeviceOrientation.portraitUp,
-                  ]);
+                  // await SystemChrome.setPreferredOrientations([
+                  //   DeviceOrientation.portraitDown,
+                  //   DeviceOrientation.portraitUp,
+                  // ]);
                   Navigator.pop(context);
                 },
               ),
@@ -80,24 +80,30 @@ class _TasksViewState extends State<TasksView> {
       /// UI item
       var movedItem =
           controller!.contents![oldListIndex].children.removeAt(oldItemIndex);
+
       /// task item
       var movedTaskItem =
           controller!.initialTasks[oldListIndex].removeAt(oldItemIndex);
+
       /// UI list
       controller!.contents![newListIndex].children
           .insert(newItemIndex, movedItem);
+
       /// task list
       controller!.initialTasks[newListIndex]
           .insert(newItemIndex, movedTaskItem);
 
       if (newListIndex == 1) {
-        controller!.updateTaskStatus(context, movedTaskItem.id!, TaskStatus.working.name.toString());
+        controller!.updateTaskStatus(
+            context, movedTaskItem.id!, TaskStatus.WORKING.name);
       }
       if (newListIndex == 2) {
-        controller!.updateTaskStatus(context, movedTaskItem.id!, TaskStatus.pause.name.toString());
+        controller!.updateTaskStatus(
+            context, movedTaskItem.id!, TaskStatus.PAUSE.name);
       }
       if (newListIndex == 3) {
-        controller!.updateTaskStatus(context, movedTaskItem.id!, TaskStatus.complete.name.toString());
+        controller!.updateTaskStatus(
+            context, movedTaskItem.id!, TaskStatus.COMPLETE.name);
       }
       if (newListIndex == 0) {
         controller!.updateTaskStatus(context, movedTaskItem.id!, null);

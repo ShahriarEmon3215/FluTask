@@ -141,7 +141,7 @@ class TaskManagerController with ChangeNotifier {
     initialTasks[3].clear();
 
     tasks.forEach((task) {
-      if (task.status == null) {
+      if (task.status == null || task.status == "") {
         contents![0].children.add(DragAndDropItem(
               child: Container(
                   decoration: BoxDecoration(
@@ -156,8 +156,7 @@ class TaskManagerController with ChangeNotifier {
             ));
         initialTasks[0].add(task);
       }
-      print(TaskStatus.working.name.toString());
-      if (task.status == TaskStatus.working.name.toString()) {
+      if (task.status == TaskStatus.WORKING.name) {
         contents![1].children.add(DragAndDropItem(
               child: Container(
                   decoration: BoxDecoration(
@@ -172,7 +171,7 @@ class TaskManagerController with ChangeNotifier {
             ));
         initialTasks[1].add(task);
       }
-      if (task.status == TaskStatus.pause.name.toString()) {
+      if (task.status == TaskStatus.PAUSE.name) {
         contents![2].children.add(DragAndDropItem(
               child: Container(
                   decoration: BoxDecoration(
@@ -187,7 +186,7 @@ class TaskManagerController with ChangeNotifier {
             ));
         initialTasks[2].add(task);
       }
-      if (task.status == TaskStatus.complete.name.toString()) {
+      if (task.status == TaskStatus.COMPLETE.name) {
         contents![3].children.add(DragAndDropItem(
               child: Container(
                   decoration: BoxDecoration(
@@ -237,4 +236,4 @@ class TaskManagerController with ChangeNotifier {
   }
 }
 
-enum TaskStatus { working, pause, complete }
+enum TaskStatus { WORKING, PAUSE, COMPLETE }

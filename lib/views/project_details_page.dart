@@ -1,4 +1,5 @@
 import 'package:flutask/controllers/project_controller.dart';
+import 'package:flutask/controllers/task_manager_controller.dart';
 import 'package:flutask/helpers/utils/app_space.dart';
 import 'package:flutask/models/task_model.dart';
 import 'package:flutter/material.dart';
@@ -157,7 +158,16 @@ class _ProjectDetailsState extends State<ProjectDetails> {
   }
 
   Widget taskItem(Task task) {
-    
+    Color statusTextColor = Colors.grey;
+    if (task.status == null) {
+      statusTextColor = Colors.grey;
+    } else if (task.status == TaskStatus.WORKING.name) {
+      statusTextColor = Colors.amber[800]!;
+    } else if (task.status == TaskStatus.PAUSE.name) {
+      statusTextColor = Colors.grey;
+    } else if (task.status == TaskStatus.COMPLETE.name) {
+      statusTextColor = Colors.green;
+    }
     return Container(
       height: 70,
       margin: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
@@ -174,14 +184,16 @@ class _ProjectDetailsState extends State<ProjectDetails> {
         subtitle: Row(
           children: [
             Text(
-              task.status == null
-                  ? task.username != null
-                      ? "Assigned to ${task.username}"
-                      : "Not assigned yet!"
+              task.status == null || task.status == ""
+                  ? "Planned"
                   : task.status!,
               style: TextStyle(
-                  color: task.status == null ? Colors.black38 : Colors.green),
+                  color: statusTextColor, fontWeight: FontWeight.bold),
             ),
+            Spacer(),
+            Icon(Icons.person),
+            AppSpace.spaceW10,
+            Text(task.username ?? "----"),
           ],
         ),
       ),
