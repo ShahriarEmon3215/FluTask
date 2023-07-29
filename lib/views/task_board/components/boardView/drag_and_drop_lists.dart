@@ -14,7 +14,6 @@ library drag_and_drop_lists;
 
 import 'dart:math';
 
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
@@ -26,7 +25,6 @@ import 'drag_and_drop_list_interface.dart';
 import 'drag_and_drop_list_target.dart';
 import 'drag_and_drop_list_wrapper.dart';
 import 'drag_handle.dart';
-
 
 typedef void OnItemReorder(
   int oldItemIndex,
@@ -272,7 +270,7 @@ class DragAndDropLists extends StatefulWidget {
   /// the vertical axis. By default this is set to true. This may be useful to
   /// disable when setting customDragTargets
   final bool constrainDraggingAxis;
-  
+
   /// If you put a widget before DragAndDropLists there's an unexpected padding
   /// before the list renders. This is the default behaviour for ListView which
   /// is used internally. To remove the padding, set this field to true
@@ -686,8 +684,8 @@ class DragAndDropListsState extends State<DragAndDropLists> {
   }
 
   final int _duration = 30; // in ms
-  final int _scrollAreaSize = 20;
-  final double _overDragMin = 5.0;
+  final int _scrollAreaSize = 100;
+  final double _overDragMin = 10.0;
   final double _overDragMax = 20.0;
   final double _overDragCoefficient = 3.3;
 

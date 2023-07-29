@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
-import '../models/project_model.dart';
+import '../../models/project_model.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});

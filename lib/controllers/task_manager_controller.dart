@@ -1,14 +1,18 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutask/constants/strings.dart';
 import 'package:flutter/material.dart';
 
+import '../constants/enums.dart';
 import '../models/task_model.dart';
 import '../repositories/task_repository.dart';
 import '../widgets/alert_message.dart';
-import '../widgets/boardView/drag_and_drop_item.dart';
-import '../widgets/boardView/drag_and_drop_list.dart';
+import '../views/task_board/components/boardView/drag_and_drop_item.dart';
+import '../views/task_board/components/boardView/drag_and_drop_list.dart';
 import '../widgets/connectivity_checker.dart';
+import '../views/task_board/components/drag_n_drop_header.dart';
+import '../views/task_board/components/task_mngr_item_ui.dart';
 
 class TaskManagerController with ChangeNotifier {
   List<Task> tasks = [];
@@ -25,26 +29,7 @@ class TaskManagerController with ChangeNotifier {
         borderRadius: BorderRadius.circular(15),
         color: const Color.fromARGB(255, 218, 218, 218),
       ),
-      header: Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(7.0)),
-                color: Colors.green,
-              ),
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                'Tasks',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ],
-      ),
+      header: DragNDropListHeaderUI(label: AppStrings.taskBoardStringTask),
       children: <DragAndDropItem>[],
     ),
     DragAndDropList(
@@ -52,26 +37,7 @@ class TaskManagerController with ChangeNotifier {
         borderRadius: BorderRadius.circular(15),
         color: const Color.fromARGB(255, 218, 218, 218),
       ),
-      header: Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(7.0)),
-                color: Colors.green,
-              ),
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                'Working',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ],
-      ),
+      header: DragNDropListHeaderUI(label: AppStrings.taskBoardStringWorking),
       children: <DragAndDropItem>[],
     ),
     DragAndDropList(
@@ -79,26 +45,7 @@ class TaskManagerController with ChangeNotifier {
         borderRadius: BorderRadius.circular(15),
         color: const Color.fromARGB(255, 218, 218, 218),
       ),
-      header: Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(7.0)),
-                color: Colors.green,
-              ),
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                'Pause',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ],
-      ),
+      header: DragNDropListHeaderUI(label: AppStrings.taskBoardStringPause),
       children: <DragAndDropItem>[],
     ),
     DragAndDropList(
@@ -106,26 +53,7 @@ class TaskManagerController with ChangeNotifier {
         borderRadius: BorderRadius.circular(15),
         color: const Color.fromARGB(255, 218, 218, 218),
       ),
-      header: Row(
-        children: <Widget>[
-          Expanded(
-            child: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(7.0)),
-                color: Colors.green,
-              ),
-              padding: const EdgeInsets.all(10),
-              child: Text(
-                'Complete',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ],
-      ),
+      header: DragNDropListHeaderUI(label: AppStrings.taskBoardStringComplete),
       children: <DragAndDropItem>[],
     ),
   ];
@@ -143,61 +71,25 @@ class TaskManagerController with ChangeNotifier {
     tasks.forEach((task) {
       if (task.status == null || task.status == "") {
         contents![0].children.add(DragAndDropItem(
-              child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  margin: EdgeInsets.all(5),
-                  padding: EdgeInsets.all(3),
-                  width: double.infinity,
-                  //height: 50,
-                  child: Text(task.taskName!)),
+              child: TaskManagerItemUI(taskName: task.taskName!),
             ));
         initialTasks[0].add(task);
       }
       if (task.status == TaskStatus.WORKING.name) {
         contents![1].children.add(DragAndDropItem(
-              child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  margin: EdgeInsets.all(5),
-                  padding: EdgeInsets.all(3),
-                  width: double.infinity,
-                  //height: 50,
-                  child: Text(task.taskName!)),
+              child: TaskManagerItemUI(taskName: task.taskName!),
             ));
         initialTasks[1].add(task);
       }
       if (task.status == TaskStatus.PAUSE.name) {
         contents![2].children.add(DragAndDropItem(
-              child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  margin: EdgeInsets.all(5),
-                  padding: EdgeInsets.all(3),
-                  width: double.infinity,
-                  //height: 50,
-                  child: Text(task.taskName!)),
+              child: TaskManagerItemUI(taskName: task.taskName!),
             ));
         initialTasks[2].add(task);
       }
       if (task.status == TaskStatus.COMPLETE.name) {
         contents![3].children.add(DragAndDropItem(
-              child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    color: Color.fromARGB(255, 255, 255, 255),
-                  ),
-                  margin: EdgeInsets.all(5),
-                  padding: EdgeInsets.all(3),
-                  width: double.infinity,
-                  //height: 50,
-                  child: Text(task.taskName!)),
+              child: TaskManagerItemUI(taskName: task.taskName!),
             ));
         initialTasks[3].add(task);
       }
@@ -235,5 +127,3 @@ class TaskManagerController with ChangeNotifier {
     }
   }
 }
-
-enum TaskStatus { WORKING, PAUSE, COMPLETE }

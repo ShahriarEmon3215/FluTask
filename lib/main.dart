@@ -4,20 +4,21 @@ import 'package:flutask/controllers/language_controller.dart';
 import 'package:flutask/controllers/project_controller.dart';
 import 'package:flutask/controllers/task_manager_controller.dart';
 import 'package:flutask/controllers/task_plan_controller.dart';
-import 'package:flutask/views/dashboard_page.dart';
-import 'package:flutask/views/register.dart';
-import 'package:flutask/views/task_plan_page.dart';
-import 'package:flutask/views/task_transtaction_screen.dart';
+import 'package:flutask/views/dashboard/dashboard_page.dart';
+import 'package:flutask/views/register/register.dart';
+import 'package:flutask/views/task_plan/task_plan_page.dart';
+import 'package:flutask/views/task_board/task_transtaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 
+import 'constants/enums.dart';
 import 'controllers/theme_controller.dart';
 import 'helpers/l10n/l10n.dart';
-import 'views/loading.dart';
-import 'views/login_page.dart';
-import 'views/project_details_page.dart';
+import 'views/initial/loading.dart';
+import 'views/login/login_page.dart';
+import 'views/project/project_details_page.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();

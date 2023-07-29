@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import '../constants/api_urls.dart';
+import '../constants/api_endpoints.dart';
 import '../helpers/shared_preference_helper.dart';
 import 'package:http/http.dart' as http;
 

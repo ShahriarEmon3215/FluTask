@@ -1,7 +1,7 @@
 import 'package:app_new_version_check/app_new_version_check.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../controllers/auth_controller.dart';
+import '../../controllers/auth_controller.dart';
 
 class Loading extends StatefulWidget {
   @override

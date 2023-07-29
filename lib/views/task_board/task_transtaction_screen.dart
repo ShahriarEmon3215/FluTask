@@ -1,10 +1,12 @@
+import 'package:flutask/constants/strings.dart';
 import 'package:flutask/widgets/kAppBar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../controllers/task_manager_controller.dart';
-import '../models/task_model.dart';
-import '../widgets/boardView/drag_and_drop_lists.dart';
+import '../../constants/enums.dart';
+import '../../controllers/task_manager_controller.dart';
+import '../../models/task_model.dart';
+import 'components/boardView/drag_and_drop_lists.dart';
 
 class TasksView extends StatefulWidget {
   const TasksView({super.key});
@@ -47,7 +49,7 @@ class _TasksViewState extends State<TasksView> {
           child: Column(
             children: [
               kAppBar(
-                title: "Tasks",
+                title: AppStrings.taskBoardScreenTitle,
                 showBackButton: true,
                 backPressHandler: () async {
                   // await SystemChrome.setPreferredOrientations([
@@ -60,7 +62,7 @@ class _TasksViewState extends State<TasksView> {
               Expanded(
                   child: DragAndDropLists(
                 axis: Axis.horizontal,
-                listWidth: 180,
+                listWidth: 220,
                 listPadding: EdgeInsets.all(5),
                 children: controller!.contents!,
                 onItemReorder: _onItemReorder,

@@ -4,8 +4,9 @@ import 'package:flutask/helpers/utils/app_space.dart';
 import 'package:flutask/models/task_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/user_model.dart';
-import '../widgets/kAppBar.dart';
+import '../../constants/enums.dart';
+import '../../models/user_model.dart';
+import '../../widgets/kAppBar.dart';
 
 class ProjectDetails extends StatefulWidget {
   ProjectDetails({super.key});

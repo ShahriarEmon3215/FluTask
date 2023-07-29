@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../controllers/auth_controller.dart';
-import '../helpers/styles/styles.dart';
-import '../helpers/utils/validate.dart';
-import '../widgets/divider.dart';
-import '../widgets/styled_flat_button.dart';
+import '../../controllers/auth_controller.dart';
+import '../../helpers/styles/styles.dart';
+import '../../helpers/utils/validate.dart';
+import '../../widgets/divider.dart';
+import '../../widgets/styled_flat_button.dart';
 
 class Register extends StatelessWidget {
   @override

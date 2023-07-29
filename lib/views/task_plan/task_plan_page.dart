@@ -3,7 +3,7 @@ import 'package:flutask/helpers/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/task_model.dart';
+import '../../models/task_model.dart';
 
 @immutable
 class ExampleDragAndDrop extends StatefulWidget {
