@@ -2,6 +2,7 @@ import 'package:flutask/controllers/project_controller.dart';
 import 'package:flutask/controllers/task_manager_controller.dart';
 import 'package:flutask/helpers/utils/app_space.dart';
 import 'package:flutask/models/task_model.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/enums.dart';
@@ -52,56 +53,60 @@ class _ProjectDetailsState extends State<ProjectDetails> {
         child: Container(
       height: size.height,
       width: size.width,
-      child: Column(
-        children: [
-          kAppBar(
-            showBackButton: true,
-            title: "Project",
-            backPressHandler: () {
-              Navigator.pop(context);
-            },
-          ),
-          AppSpace.spaceH10,
-          Row(
-            children: [
-              AppSpace.spaceW10,
-              topCardItem("Collaborators", "assets/images/collaborators.png"),
-              AppSpace.spaceW10,
-              topCardItem("Task Plan", "assets/images/plan.png"),
-              AppSpace.spaceW10,
-            ],
-          ),
-          AppSpace.spaceH4,
-          Row(
-            children: [
-              AppSpace.spaceW10,
-              topCardItem("Create Task", "assets/images/create.png"),
-              AppSpace.spaceW10,
-              topCardItem("Project Settings", "assets/images/settings.png"),
-              AppSpace.spaceW10,
-            ],
-          ),
-          Spacer(),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                "Tasks",
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 20,
-                    color: Colors.black38),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            kAppBar(
+              showBackButton: true,
+              title: "Project",
+              backPressHandler: () {
+                Navigator.pop(context);
+              },
+            ),
+            AppSpace.spaceH10,
+            Row(
+              children: [
+                AppSpace.spaceW10,
+                topCardItem(
+                    "Collaborators", "assets/images/collaborators.png", size),
+                AppSpace.spaceW10,
+                topCardItem("Task Plan", "assets/images/plan.png", size),
+                AppSpace.spaceW10,
+              ],
+            ),
+            AppSpace.spaceH4,
+            Row(
+              children: [
+                AppSpace.spaceW10,
+                topCardItem("Create Task", "assets/images/create.png", size),
+                AppSpace.spaceW10,
+                topCardItem(
+                    "Project Settings", "assets/images/settings.png", size),
+                AppSpace.spaceW10,
+              ],
+            ),
+            AppSpace.spaceH10,
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Text(
+                  "Tasks",
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Colors.black38),
+                ),
               ),
             ),
-          ),
-          taskListView(size),
-        ],
+            taskListView(size),
+          ],
+        ),
       ),
     ));
   }
 
-  Widget topCardItem(String label, String imgPath) {
+  Widget topCardItem(String label, String imgPath, Size size) {
     return Expanded(
       child: InkWell(
         onTap: () async {
@@ -112,6 +117,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                 arguments: [controller!.tasks, controller!.collaborators]);
             controller!.getTasks(context, controller!.projectId!);
           } else if (label == "Create Task") {
+            createTask(size);
           } else if (label == "Project Settings") {}
         },
         child: Card(
@@ -133,6 +139,97 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                 ),
               ],
             ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> createTask(Size size) {
+    return showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Container(
+          height: 200,
+          width: MediaQuery.sizeOf(context).width,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: Column(
+            children: [
+              AppSpace.spaceH8,
+              Row(
+                children: [
+                  AppSpace.spaceW26,
+                  Text(
+                    "Create Task".toUpperCase(),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20,
+                      color: Color.fromARGB(255, 167, 167, 167),
+                    ),
+                  ),
+                  Spacer(),
+                  IconButton(
+                    onPressed: () {},
+                    icon: CircleAvatar(
+                      child: Icon(
+                        Icons.check,
+                        size: 30,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ),
+                  AppSpace.spaceW12,
+                ],
+              ),
+              AppSpace.spaceH8,
+              Container(
+                height: 60,
+                width: size.width,
+                margin: EdgeInsets.symmetric(horizontal: 18),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                      offset: Offset(0, 0),
+                      spreadRadius: 2,
+                      blurRadius: 2,
+                      color: Color.fromARGB(255, 224, 224, 224),
+                    ),
+                  ],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: TextField(
+                  controller: controller!.taskNameTextController,
+                  textAlign: TextAlign.start,
+                  maxLines: 1,
+                  decoration: InputDecoration(
+                    hintText: "Task Name",
+                    hintStyle: TextStyle(
+                      color: Color.fromARGB(255, 158, 158, 158),
+                    ),
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                ),
+              ),
+              Spacer(),
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text(
+                  "Close",
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ],
           ),
         ),
       ),

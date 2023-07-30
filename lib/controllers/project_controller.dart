@@ -13,8 +13,9 @@ class ProjectController with ChangeNotifier {
   List<User> collaborators = [];
   List<Task> tasks = [];
   User? userForAdd = User();
-  TextEditingController emailTextController = TextEditingController();
+  var emailTextController = TextEditingController();
   bool? showSearchedUser = false;
+  var taskNameTextController = TextEditingController();
 
   Future getCollaborators(BuildContext context, int projectId) async {
     bool? connectivity = await checkConnectivity();
