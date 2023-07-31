@@ -11,8 +11,8 @@ class ApiUrl {
   static String getUserByEmail = '${baseUrl}user/getUserByEmail';
   static String createCollaborationUrl =
       '${baseUrl}collaboration/createCollaboration';
-  static String updateTaskStatusUrl =
-      '${baseUrl}task/updateTaskStatus/';
-    static String updateTaskCollaborationUrl =
+  static String updateTaskStatusUrl = '${baseUrl}task/updateTaskStatus/';
+  static String updateTaskCollaborationUrl =
       '${baseUrl}task/updateTaskCollatoraion/';
+  static String createTaskUrl = "${baseUrl}task/createTask";
 }

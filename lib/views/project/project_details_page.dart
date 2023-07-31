@@ -1,8 +1,6 @@
 import 'package:flutask/controllers/project_controller.dart';
-import 'package:flutask/controllers/task_manager_controller.dart';
 import 'package:flutask/helpers/utils/app_space.dart';
 import 'package:flutask/models/task_model.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../constants/enums.dart';
@@ -67,10 +65,11 @@ class _ProjectDetailsState extends State<ProjectDetails> {
             Row(
               children: [
                 AppSpace.spaceW10,
-                topCardItem(
-                    "Collaborators", "assets/images/collaborators.png", size),
+                topCardItem("Collaborators", "assets/images/collaborators.png",
+                    size, context),
                 AppSpace.spaceW10,
-                topCardItem("Task Plan", "assets/images/plan.png", size),
+                topCardItem(
+                    "Task Plan", "assets/images/plan.png", size, context),
                 AppSpace.spaceW10,
               ],
             ),
@@ -78,10 +77,11 @@ class _ProjectDetailsState extends State<ProjectDetails> {
             Row(
               children: [
                 AppSpace.spaceW10,
-                topCardItem("Create Task", "assets/images/create.png", size),
-                AppSpace.spaceW10,
                 topCardItem(
-                    "Project Settings", "assets/images/settings.png", size),
+                    "Create Task", "assets/images/create.png", size, context),
+                AppSpace.spaceW10,
+                topCardItem("Project Settings", "assets/images/settings.png",
+                    size, context),
                 AppSpace.spaceW10,
               ],
             ),
@@ -106,7 +106,8 @@ class _ProjectDetailsState extends State<ProjectDetails> {
     ));
   }
 
-  Widget topCardItem(String label, String imgPath, Size size) {
+  Widget topCardItem(
+      String label, String imgPath, Size size, BuildContext ctx) {
     return Expanded(
       child: InkWell(
         onTap: () async {
@@ -117,7 +118,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                 arguments: [controller!.tasks, controller!.collaborators]);
             controller!.getTasks(context, controller!.projectId!);
           } else if (label == "Create Task") {
-            createTask(size);
+            createTask(size, ctx);
           } else if (label == "Project Settings") {}
         },
         child: Card(
@@ -145,7 +146,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
     );
   }
 
-  Future<dynamic> createTask(Size size) {
+  Future<dynamic> createTask(Size size, BuildContext ctx) {
     return showDialog(
       context: context,
       builder: (context) => Dialog(
@@ -175,7 +176,14 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                   ),
                   Spacer(),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      FocusScope.of(ctx).unfocus();
+                      await controller!.createTask(
+                        ctx,
+                        controller!.taskNameTextController.text,
+                      );
+                      Navigator.pop(ctx);
+                    },
                     icon: CircleAvatar(
                       child: Icon(
                         Icons.check,

@@ -158,4 +158,33 @@ class ProjectController with ChangeNotifier {
     }
     notifyListeners();
   }
+
+  Future createTask(BuildContext context, String taskName) async {
+    bool? connectivity = await checkConnectivity();
+    if (connectivity) {
+      var resValue;
+      try {
+        resValue = await ProjectRepository()
+            .createTask(taskName: taskName, projectId: this.projectId);
+      } on SocketException {
+        CustomAlert().messageAlert(
+            message: "Server not found!", context: context, isError: true);
+      }
+
+      var bodyMap = json.decode(resValue.body);
+      var resCode = resValue.statusCode;
+
+      if (resCode == 200) {
+        taskNameTextController.clear();
+        getTasks(context, this.projectId!);
+      } else {
+        CustomAlert().messageAlert(
+            message: bodyMap['message'], context: context, isError: true);
+      }
+      notifyListeners();
+    } else {
+      CustomAlert().messageAlert(
+          message: "No internet!", context: context, isError: true);
+    }
+  }
 }

@@ -684,7 +684,7 @@ class DragAndDropListsState extends State<DragAndDropLists> {
   }
 
   final int _duration = 30; // in ms
-  final int _scrollAreaSize = 100;
+  final int _scrollAreaSize = 50;
   final double _overDragMin = 10.0;
   final double _overDragMax = 20.0;
   final double _overDragCoefficient = 3.3;

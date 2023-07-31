@@ -135,4 +135,30 @@ class ProjectRepository {
       throw ex;
     }
   }
+
+  Future createTask(
+      {required String? taskName, required int? projectId}) async {
+    final String? token = await SharedPreferencesHelper.getToken();
+    try {
+      var headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer $token',
+      };
+      var body = {
+        "task_name": taskName,
+        "project_id": projectId,
+        "creation_date": DateTime.now().toString()
+      };
+
+      var response = await http.post(
+        Uri.parse(ApiUrl.createTaskUrl),
+        headers: headers,
+        body: json.encode(body),
+      );
+      debugPrint(response.body.toString());
+      return response;
+    } catch (ex) {
+      throw ex;
+    }
+  }
 }
