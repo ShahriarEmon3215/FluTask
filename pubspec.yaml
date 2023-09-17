@@ -23,6 +23,7 @@ dependencies:
   simple_circular_progress_bar: ^1.0.2
   easy_animated_tabbar: ^0.0.1
   app_new_version_check: ^0.0.3
+  countup: ^0.1.4
 
 dev_dependencies:
   flutter_test:

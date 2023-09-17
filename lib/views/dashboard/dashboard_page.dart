@@ -1,14 +1,13 @@
 import 'package:app_new_version_check/app_new_version_check.dart';
-import 'package:easy_animated_tabbar/easy_animated_tabbar.dart';
+import 'package:countup/countup.dart';
 import 'package:flutask/controllers/auth_controller.dart';
 import 'package:flutask/controllers/dashbord_controller.dart';
 import 'package:flutask/helpers/utils/app_space.dart';
 import 'package:flutask/helpers/utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:simple_circular_progress_bar/simple_circular_progress_bar.dart';
 
-import '../../models/project_model.dart';
+import 'Components/project_item_view.dart';
 
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
@@ -85,8 +84,10 @@ class _DashboardPageState extends State<DashboardPage>
       child: Stack(
         children: [
           Container(
-            height: size.height, width: size.width, color: Colors.white,
-            //child: Image.asset("assets/images/bg.jpg"),
+            height: size.height,
+            width: size.width,
+            color: Colors.white,
+            //  child: Image.asset("assets/images/bg.jpg"),
           ),
           Positioned(
               bottom: 0,
@@ -141,8 +142,11 @@ class _DashboardPageState extends State<DashboardPage>
                                     child: Column(
                                       children: [
                                         ...controller.projectList.map(
-                                          (project) =>
-                                              projectCardItem(size, project),
+                                          (project) => ProjectItem(
+                                            context: context,
+                                            size: size,
+                                            project: project,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -152,8 +156,11 @@ class _DashboardPageState extends State<DashboardPage>
                                       children: [
                                         ...controller.contributedProjectList
                                             .map(
-                                          (project) =>
-                                              projectCardItem(size, project),
+                                          (project) => ProjectItem(
+                                            context: context,
+                                            size: size,
+                                            project: project,
+                                          ),
                                         ),
                                       ],
                                     ),
@@ -168,7 +175,7 @@ class _DashboardPageState extends State<DashboardPage>
                 },
               )),
           Container(
-            height: size.height * 0.39,
+            height: size.height * 0.4,
             padding: EdgeInsets.all(15),
             decoration: BoxDecoration(
               color: Colors.white,
@@ -193,52 +200,6 @@ class _DashboardPageState extends State<DashboardPage>
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget projectCardItem(Size size, Project project) {
-    return InkWell(
-      onTap: () {
-        Navigator.pushNamed(context, '/project', arguments: project.id);
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: 5),
-        width: size.width,
-        height: 100,
-        padding: EdgeInsets.all(10),
-        alignment: Alignment.bottomCenter,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(20),
-            color: const Color.fromARGB(255, 245, 245, 245)),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Column(
-              children: [
-                Text(
-                  project.projectName ?? "Undefined Name",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
-                ),
-              ],
-            ),
-            Spacer(),
-            SizedBox(
-              height: 50,
-              width: 50,
-              child: SimpleCircularProgressBar(
-                progressStrokeWidth: 10,
-                backStrokeWidth: 5,
-                mergeMode: true,
-                maxValue: 100,
-                valueNotifier: ValueNotifier(50),
-                onGetText: (double value) {
-                  return Text('${value.toInt()}%');
-                },
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
@@ -286,7 +247,7 @@ class _DashboardPageState extends State<DashboardPage>
 
   Container _topStatusCardItem(Color color, String value, String label) {
     return Container(
-      height: 100,
+      height: MediaQuery.sizeOf(context).height * 0.12,
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(15),
@@ -294,8 +255,11 @@ class _DashboardPageState extends State<DashboardPage>
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            value,
+          Countup(
+            begin: 0,
+            end: double.parse(value),
+            duration: Duration(seconds: 3),
+            separator: ',',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
           ),
           AppSpace.spaceH10,
