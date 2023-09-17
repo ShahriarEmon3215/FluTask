@@ -56,7 +56,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.colorThree,
+      //  backgroundColor: AppColors.colorThree,
       appBar: _buildAppBar(),
       body: _buildContent(),
     );
@@ -71,12 +71,12 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
         'Task Assign',
         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
               fontSize: 25,
-              color: AppColors.green,
+              color: Colors.black54,
               fontWeight: FontWeight.bold,
             ),
       ),
-      backgroundColor: AppColors.colorFour,
       elevation: 0,
+      backgroundColor: Color.fromRGBO(243, 228, 255, 1),
       actions: [
         IconButton(onPressed: () {}, icon: Icon(Icons.settings_ethernet)),
       ],
@@ -192,7 +192,9 @@ class CustomerCart extends StatelessWidget {
       child: Material(
         elevation: highlighted ? 8.0 : 4.0,
         borderRadius: BorderRadius.circular(22.0),
-        color: highlighted ? Color.fromARGB(255, 179, 231, 181) : Colors.white,
+        color: highlighted
+            ? Color.fromARGB(255, 179, 231, 181)
+            : Color.fromRGBO(243, 228, 255, 1),
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 12.0,

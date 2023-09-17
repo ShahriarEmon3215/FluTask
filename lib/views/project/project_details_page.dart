@@ -367,6 +367,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                       )
                     ],
                   ),
+                  AppSpace.spaceH10,
                   if (controller!.showSearchedUser!)
                     Row(
                       children: [
@@ -386,7 +387,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
                         ),
                         AppSpace.spaceW10,
                         Container(
-                          height: 50,
+                          height: 40,
                           child: ElevatedButton(
                             onPressed: () async {
                               await controller!.createCollaboration(context);

@@ -4,14 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 ThemeData light = ThemeData(
   //brightness: Brightness.light,
   useMaterial3: true,
-  primarySwatch: Colors.indigo,
+  primarySwatch: Colors.green,
   textTheme: TextTheme(
       displayLarge: TextStyle(
           fontSize: 30, fontWeight: FontWeight.bold, color: Colors.indigo),
       displayMedium: TextStyle(
           fontSize: 15, fontWeight: FontWeight.bold, color: Colors.indigo)),
   buttonTheme: ButtonThemeData(
-    buttonColor: Colors.indigo,
+    buttonColor: Colors.green,
     textTheme: ButtonTextTheme.primary,
   ),
 );
@@ -57,7 +57,7 @@ class ThemeNotifier extends ChangeNotifier {
 
   loadFromPrefs() async {
     await _initPrefs();
-    prefs!.getBool(key) ?? await prefs!.setBool(key, true); 
+    prefs!.getBool(key) ?? await prefs!.setBool(key, true);
     _darkTheme = prefs!.getBool(key) ?? false;
     notifyListeners();
   }
