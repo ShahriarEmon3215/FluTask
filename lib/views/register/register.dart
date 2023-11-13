@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../controllers/auth_controller.dart';
 import '../../helpers/styles/styles.dart';
 import '../../helpers/utils/validate.dart';
@@ -26,14 +25,14 @@ class Register extends StatelessWidget {
   }
 }
 
-class RegisterForm extends StatefulWidget {
+class RegisterForm extends ConsumerStatefulWidget {
   const RegisterForm({Key? key}) : super(key: key);
 
   @override
   RegisterFormState createState() => RegisterFormState();
 }
 
-class RegisterFormState extends State<RegisterForm> {
+class RegisterFormState extends ConsumerState<RegisterForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String? name;
@@ -47,7 +46,8 @@ class RegisterFormState extends State<RegisterForm> {
   Future<void> submit() async {
     final form = _formKey.currentState;
     if (form!.validate()) {
-      response = await Provider.of<AuthProvider>(context, listen: false)
+      response = await ref
+          .read(authProvider.notifier)
           .register(name!, email!, password!, passwordConfirm!, context);
       if (response) {
         Navigator.pop(context);
@@ -134,8 +134,9 @@ class RegisterFormState extends State<RegisterForm> {
   }
 
   Widget _passwordField() {
-    return Consumer<AuthProvider>(
-      builder: (context, controller, child) {
+    return Consumer(
+      builder: (context, ref, child) {
+        var controller = ref.watch(authProvider);
         return Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(
@@ -164,8 +165,9 @@ class RegisterFormState extends State<RegisterForm> {
   }
 
   Widget _confirmPasswordField() {
-    return Consumer<AuthProvider>(
-      builder: (context, controller, child) {
+    return Consumer(
+      builder: (context, ref, child) {
+        var controller = ref.watch(authProvider);
         return Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(

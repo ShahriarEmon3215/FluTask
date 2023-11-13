@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:provider/provider.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../controllers/auth_controller.dart';
 import '../../helpers/styles/styles.dart';
 import '../../helpers/utils/validate.dart';
@@ -24,26 +23,24 @@ class LogIn extends StatelessWidget {
   }
 }
 
-class LogInForm extends StatefulWidget {
+class LogInForm extends ConsumerStatefulWidget {
   const LogInForm({Key? key}) : super(key: key);
 
   @override
   LogInFormState createState() => LogInFormState();
 }
 
-class LogInFormState extends State<LogInForm> {
+class LogInFormState extends ConsumerState<LogInForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   String? email;
   String? password;
   String? message = '';
 
-
   Future<void> submit() async {
     final form = _formKey.currentState;
     if (form!.validate()) {
-      await Provider.of<AuthProvider>(context, listen: false)
-          .login(email!, password!, context);
+      await ref.read(authProvider.notifier).login(email!, password!, context);
     }
   }
 
@@ -110,8 +107,9 @@ class LogInFormState extends State<LogInForm> {
   }
 
   Widget _passwordTextField() {
-    return Consumer<AuthProvider>(
-      builder: (context, controller, child) {
+    return Consumer(
+      builder: (context, ref, child) {
+        var controller = ref.watch(authProvider);
         return Container(
           padding: EdgeInsets.all(10),
           decoration: BoxDecoration(

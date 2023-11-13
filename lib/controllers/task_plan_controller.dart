@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/task_model.dart';
 import '../repositories/task_repository.dart';
 import '../views/task_plan/task_plan_page.dart';
 import '../widgets/alert_message.dart';
 import '../widgets/connectivity_checker.dart';
+
+var taskPlannerProvider =
+    ChangeNotifierProvider.autoDispose((ref) => TaskPlanController());
 
 class TaskPlanController extends ChangeNotifier {
   List<Task> tasks = [];

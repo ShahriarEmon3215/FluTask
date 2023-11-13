@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutask/constants/strings.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/enums.dart';
 import '../models/task_model.dart';
 import '../repositories/task_repository.dart';
@@ -13,6 +12,8 @@ import '../views/task_board/components/boardView/drag_and_drop_list.dart';
 import '../widgets/connectivity_checker.dart';
 import '../views/task_board/components/drag_n_drop_header.dart';
 import '../views/task_board/components/task_mngr_item_ui.dart';
+
+var taskManagerProvider = ChangeNotifierProvider((ref) => TaskManagerController());
 
 class TaskManagerController with ChangeNotifier {
   List<Task> tasks = [];

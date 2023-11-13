@@ -1,19 +1,18 @@
 import 'package:flutask/controllers/task_plan_controller.dart';
 import 'package:flutask/helpers/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../models/task_model.dart';
 
 @immutable
-class ExampleDragAndDrop extends StatefulWidget {
+class ExampleDragAndDrop extends ConsumerStatefulWidget {
   const ExampleDragAndDrop({super.key});
 
   @override
-  State<ExampleDragAndDrop> createState() => _ExampleDragAndDropState();
+  ConsumerState<ExampleDragAndDrop> createState() => _ExampleDragAndDropState();
 }
 
-class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
+class _ExampleDragAndDropState extends ConsumerState<ExampleDragAndDrop>
     with TickerProviderStateMixin {
   final GlobalKey _draggableKey = GlobalKey();
 
@@ -38,7 +37,7 @@ class _ExampleDragAndDropState extends State<ExampleDragAndDrop>
   void didChangeDependencies() async {
     super.didChangeDependencies();
     if (!isDataLoaded) {
-      controller = Provider.of<TaskPlanController>(context, listen: false);
+      controller = ref.read(taskPlannerProvider.notifier);
       List<dynamic> args = ModalRoute.of(context)!.settings.arguments as List;
       controller!.tasks.clear();
       controller!.tasks.addAll(args[0]);

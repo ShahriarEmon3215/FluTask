@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../helpers/l10n/language_helper.dart';
+
+var languageProvider = ChangeNotifierProvider.autoDispose((ref)=> LanguageController());
 
 class LanguageController with ChangeNotifier {
   String? currentLanguage;
   Locale? locale;
   SharedPreferences? prefs;
-
 
   LanguageHelper? languageHelper = LanguageHelper();
 

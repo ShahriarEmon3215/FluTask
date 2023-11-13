@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutask/models/collaboration_request_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/task_model.dart';
 import '../models/user_model.dart';
 import '../repositories/project_repository.dart';
 import '../widgets/alert_message.dart';
 import '../widgets/connectivity_checker.dart';
+
+var projectProvider = ChangeNotifierProvider.autoDispose((ref)=> ProjectController());
 
 class ProjectController with ChangeNotifier {
   int? projectId = 0;

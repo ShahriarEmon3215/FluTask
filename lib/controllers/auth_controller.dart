@@ -2,10 +2,14 @@ import 'package:flutask/helpers/shared_preference_helper.dart';
 import 'package:flutask/repositories/auth_repository.dart';
 import 'package:flutask/widgets/alert_message.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../constants/enums.dart';
 import '../widgets/connectivity_checker.dart';
+
+
+var authProvider = ChangeNotifierProvider.autoDispose((ref) => AuthProvider());
 
 
 class AuthProvider with ChangeNotifier {

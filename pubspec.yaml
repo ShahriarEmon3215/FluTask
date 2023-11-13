@@ -13,7 +13,6 @@ dependencies:
 
 
   cupertino_icons: ^1.0.2
-  provider: ^6.0.5
   shared_preferences: ^2.1.1
   progress_loading_button: ^1.1.6
   flutter_localizations:
@@ -24,6 +23,7 @@ dependencies:
   easy_animated_tabbar: ^0.0.1
   app_new_version_check: ^0.0.3
   countup: ^0.1.4
+  flutter_riverpod: ^2.4.6
 
 dev_dependencies:
   flutter_test:

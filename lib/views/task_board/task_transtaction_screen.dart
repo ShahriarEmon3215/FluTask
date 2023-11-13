@@ -1,21 +1,20 @@
 import 'package:flutask/constants/strings.dart';
 import 'package:flutask/widgets/kAppBar.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/enums.dart';
 import '../../controllers/task_manager_controller.dart';
 import '../../models/task_model.dart';
 import 'components/boardView/drag_and_drop_lists.dart';
 
-class TasksView extends StatefulWidget {
+class TasksView extends ConsumerStatefulWidget {
   const TasksView({super.key});
 
   @override
-  State<TasksView> createState() => _TasksViewState();
+  ConsumerState<TasksView> createState() => _TasksViewState();
 }
 
-class _TasksViewState extends State<TasksView> {
+class _TasksViewState extends ConsumerState<TasksView> {
   @override
   void initState() {
     super.initState();
@@ -33,7 +32,7 @@ class _TasksViewState extends State<TasksView> {
     super.didChangeDependencies();
 
     if (!isDataLoaded) {
-      controller = Provider.of<TaskManagerController>(context, listen: false);
+      controller = ref.read(taskManagerProvider);
       controller!.tasks =
           ModalRoute.of(context)!.settings.arguments as List<Task>;
       controller!.bindTasks();

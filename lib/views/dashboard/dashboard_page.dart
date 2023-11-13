@@ -5,19 +5,20 @@ import 'package:flutask/controllers/dashbord_controller.dart';
 import 'package:flutask/helpers/utils/app_space.dart';
 import 'package:flutask/helpers/utils/colors.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'Components/project_item_view.dart';
 
-class DashboardPage extends StatefulWidget {
+class DashboardPage extends ConsumerStatefulWidget {
   const DashboardPage({super.key});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  ConsumerState<DashboardPage> createState() => _DashboardPageState();
 }
 
-class _DashboardPageState extends State<DashboardPage>
+class _DashboardPageState extends ConsumerState<DashboardPage>
     with TickerProviderStateMixin {
+      var controller;
   TabController? _tabController;
   @override
   void initState() {
@@ -31,10 +32,9 @@ class _DashboardPageState extends State<DashboardPage>
     super.didChangeDependencies();
     if (!isDataLoaded!) {
       check(context);
-      var dashboardProvider =
-          Provider.of<DashboardController>(context, listen: false);
-      await dashboardProvider.getProjectList(context);
-      await dashboardProvider.getContributedProjectsList(context);
+     controller  = ref.read(dashboardProvider.notifier);
+      await controller.getProjectList(context);
+      await controller.getContributedProjectsList(context);
       isDataLoaded = true;
     }
   }
@@ -49,14 +49,15 @@ class _DashboardPageState extends State<DashboardPage>
 
   @override
   Widget build(BuildContext context) {
+    ref.watch(dashboardProvider.notifier);
     var size = MediaQuery.of(context).size;
-    var authProvider = Provider.of<AuthProvider>(context, listen: false);
-    var controller = Provider.of<DashboardController>(context, listen: false);
+    var authController = ref.read(authProvider.notifier);
+     controller = ref.read(dashboardProvider.notifier);
     return DefaultTabController(
       length: 2,
       child: Scaffold(
         backgroundColor: AppColors.colorFour,
-        body: bodyUi(size, context, authProvider, controller),
+        body: bodyUi(size, context, authController, controller),
         floatingActionButton: bottomFloatButton(),
       ),
     );
@@ -91,8 +92,8 @@ class _DashboardPageState extends State<DashboardPage>
           ),
           Positioned(
               bottom: 0,
-              child: Consumer<DashboardController>(
-                builder: (context, controller, child) {
+              child: Consumer(
+                builder: (context, ref, child) {
                   return Container(
                     height: size.height * 0.59,
                     width: size.width,

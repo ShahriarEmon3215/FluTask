@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-
 import 'package:flutask/helpers/shared_preference_helper.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/project_model.dart';
 import '../repositories/project_repository.dart';
 import '../widgets/alert_message.dart';
 import '../widgets/connectivity_checker.dart';
 
-class DashboardController extends ChangeNotifier {
+var dashboardProvider = ChangeNotifierProvider.autoDispose((ref) => DashboardController());
 
+class DashboardController extends ChangeNotifier {
   final List<Color> _colorList = [
     Color.fromRGBO(253, 234, 236, 1),
     Color.fromRGBO(214, 238, 255, 1),

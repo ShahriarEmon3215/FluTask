@@ -2,19 +2,19 @@ import 'package:flutask/controllers/project_controller.dart';
 import 'package:flutask/helpers/utils/app_space.dart';
 import 'package:flutask/models/task_model.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../constants/enums.dart';
 import '../../models/user_model.dart';
 import '../../widgets/kAppBar.dart';
 
-class ProjectDetails extends StatefulWidget {
+class ProjectDetails extends ConsumerStatefulWidget {
   ProjectDetails({super.key});
 
   @override
-  State<ProjectDetails> createState() => _ProjectDetailsState();
+  ConsumerState<ProjectDetails> createState() => _ProjectDetailsState();
 }
 
-class _ProjectDetailsState extends State<ProjectDetails> {
+class _ProjectDetailsState extends ConsumerState<ProjectDetails> {
   @override
   void initState() {
     super.initState();
@@ -27,7 +27,7 @@ class _ProjectDetailsState extends State<ProjectDetails> {
     super.didChangeDependencies();
 
     if (!isDataLoaded) {
-      controller = Provider.of<ProjectController>(context, listen: false);
+      controller = ref.read(projectProvider);
       controller!.projectId = ModalRoute.of(context)!.settings.arguments as int;
       print(controller!.projectId);
       await controller!.getCollaborators(context, controller!.projectId!);
@@ -245,24 +245,21 @@ class _ProjectDetailsState extends State<ProjectDetails> {
   }
 
   Widget taskListView(Size size) {
-    return Consumer<ProjectController>(
-      builder: (context, controller, child) => Container(
+    return Container(
         height: size.height * 0.45,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: const Color.fromARGB(255, 236, 236, 236),
         ),
-        child: controller.tasks.length != 0
+        child: controller!.tasks.length != 0
             ? ListView.builder(
-                itemCount: controller.tasks.length,
+                itemCount: controller!.tasks.length,
                 itemBuilder: (context, index) {
-                  Task task = controller.tasks[index];
+                  Task task = controller!.tasks[index];
                   return taskItem(task);
                 },
               )
-            : Center(child: Text("No tasks")),
-      ),
-    );
+            : Center(child: Text("No tasks")));
   }
 
   Widget taskItem(Task task) {

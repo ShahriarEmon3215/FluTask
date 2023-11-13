@@ -11,7 +11,7 @@ import 'package:flutask/views/task_board/task_transtaction_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'constants/enums.dart';
 import 'controllers/theme_controller.dart';
 import 'helpers/l10n/l10n.dart';
@@ -25,7 +25,7 @@ void main() {
       // systemNavigationBarColor: Colors.blue, // navigation bar color
       //statusBarColor: Color.fromARGB(244, 35, 30, 44), // status bar color
       statusBarIconBrightness: Brightness.light));
-  runApp(MyApp());
+  runApp(ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -33,59 +33,41 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider<ThemeNotifier>(create: (_) => ThemeNotifier()),
-        ChangeNotifierProvider<LanguageController>(
-            create: (_) => LanguageController()),
-        ChangeNotifierProvider<AuthProvider>(create: (_) => AuthProvider()),
-        ChangeNotifierProvider<DashboardController>(
-            create: (_) => DashboardController()),
-        ChangeNotifierProvider<ProjectController>(
-            create: (_) => ProjectController()),
-        ChangeNotifierProvider<TaskManagerController>(
-            create: (_) => TaskManagerController()),
-        ChangeNotifierProvider<TaskPlanController>(
-            create: (_) => TaskPlanController()),
-      ],
-      child: Consumer2<ThemeNotifier, LanguageController>(
-          builder: (context, themeNotifier, languageController, child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: 'FluTask App',
-          theme: themeNotifier.darkTheme! ? dark : light,
-          locale: languageController.locale,
-          localizationsDelegates: [
-            AppLocalizationDelegate(),
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: [
-            const Locale('en'),
-            const Locale('bn'),
-          ],
-          routes: {
-            '/': (context) => Router(),
-            '/login': (context) => LogIn(),
-            '/register': (context) => Register(),
-            '/dashboard': (context) => DashboardPage(),
-            '/task_plan': (context) => ExampleDragAndDrop(),
-            '/project': (context) => ProjectDetails(),
-            '/tasks': (context) => TasksView(),
-          },
-        );
-      }),
-    );
+    return Consumer(builder: (context, themeNotifier, child) {
+      return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'FluTask App',
+        localizationsDelegates: [
+          AppLocalizationDelegate(),
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('en'),
+          const Locale('bn'),
+        ],
+        routes: {
+          '/': (context) => Router(),
+          '/login': (context) => LogIn(),
+          '/register': (context) => Register(),
+          '/dashboard': (context) => DashboardPage(),
+          '/task_plan': (context) => ExampleDragAndDrop(),
+          '/project': (context) => ProjectDetails(),
+          '/tasks': (context) => TasksView(),
+        },
+      );
+    });
   }
 }
 
 class Router extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<AuthProvider>(
-      builder: (context, user, child) {
-        switch (user.status) {
+    return Consumer(
+      builder: (context, ref, child) {
+      var provider =  ref.watch(authProvider);
+        switch (provider.status) {
           case Status.Uninitialized:
             return Loading();
           case Status.Unauthenticated:
