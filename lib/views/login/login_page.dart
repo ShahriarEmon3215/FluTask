@@ -56,7 +56,7 @@ class LogInFormState extends ConsumerState<LogInForm> {
             Text(
               'FluTask',
               textAlign: TextAlign.center,
-              style: Theme.of(context).textTheme.displayLarge,
+              style: Theme.of(context).textTheme.displayMedium,
             ),
             SizedBox(height: 30.0),
             _emailTextField(),
@@ -64,7 +64,7 @@ class LogInFormState extends ConsumerState<LogInForm> {
             _passwordTextField(),
             SizedBox(height: 15.0),
             StyledFlatButton(
-              'LOGIN IN',
+              'LOGIN',
               onPressed: submit,
             ),
             SizedBox(height: 20.0),

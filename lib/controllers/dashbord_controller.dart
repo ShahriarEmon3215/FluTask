@@ -9,7 +9,8 @@ import '../repositories/project_repository.dart';
 import '../widgets/alert_message.dart';
 import '../widgets/connectivity_checker.dart';
 
-var dashboardProvider = ChangeNotifierProvider.autoDispose((ref) => DashboardController());
+var dashboardProvider =
+    ChangeNotifierProvider.autoDispose((ref) => DashboardController());
 
 class DashboardController extends ChangeNotifier {
   final List<Color> _colorList = [

@@ -18,7 +18,7 @@ class DashboardPage extends ConsumerStatefulWidget {
 
 class _DashboardPageState extends ConsumerState<DashboardPage>
     with TickerProviderStateMixin {
-      var controller;
+  var controller;
   TabController? _tabController;
   @override
   void initState() {
@@ -32,7 +32,7 @@ class _DashboardPageState extends ConsumerState<DashboardPage>
     super.didChangeDependencies();
     if (!isDataLoaded!) {
       check(context);
-     controller  = ref.read(dashboardProvider.notifier);
+      controller = ref.read(dashboardProvider.notifier);
       await controller.getProjectList(context);
       await controller.getContributedProjectsList(context);
       isDataLoaded = true;
@@ -49,10 +49,10 @@ class _DashboardPageState extends ConsumerState<DashboardPage>
 
   @override
   Widget build(BuildContext context) {
-    ref.watch(dashboardProvider.notifier);
+    ref.watch(dashboardProvider);
     var size = MediaQuery.of(context).size;
     var authController = ref.read(authProvider.notifier);
-     controller = ref.read(dashboardProvider.notifier);
+    controller = ref.read(dashboardProvider.notifier);
     return DefaultTabController(
       length: 2,
       child: Scaffold(

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutask/models/collaboration_request_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../helpers/shared_preference_helper.dart';
 import '../models/task_model.dart';
 import '../models/user_model.dart';
 import '../repositories/project_repository.dart';
@@ -132,6 +133,8 @@ class ProjectController with ChangeNotifier {
     if (connectivity) {
       var resValue;
       try {
+      
+
         resValue = await ProjectRepository().getTasks(projectId);
       } on SocketException {
         CustomAlert().messageAlert(
@@ -164,11 +167,13 @@ class ProjectController with ChangeNotifier {
 
   Future createTask(BuildContext context, String taskName) async {
     bool? connectivity = await checkConnectivity();
+
     if (connectivity) {
       var resValue;
       try {
+          int? userId = await SharedPreferencesHelper.getLoginUserId();
         resValue = await ProjectRepository()
-            .createTask(taskName: taskName, projectId: this.projectId);
+            .createTask(taskName: taskName, projectId: this.projectId, uId: userId);
       } on SocketException {
         CustomAlert().messageAlert(
             message: "Server not found!", context: context, isError: true);

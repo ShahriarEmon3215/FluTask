@@ -137,7 +137,7 @@ class ProjectRepository {
   }
 
   Future createTask(
-      {required String? taskName, required int? projectId}) async {
+      {required String? taskName, required int? projectId, required int? uId}) async {
     final String? token = await SharedPreferencesHelper.getToken();
     try {
       var headers = {
@@ -147,6 +147,10 @@ class ProjectRepository {
       var body = {
         "task_name": taskName,
         "project_id": projectId,
+        "status": "",
+        "user_id": uId,
+        "username": "",
+        "collaboration_date": "",
         "creation_date": DateTime.now().toString()
       };
 

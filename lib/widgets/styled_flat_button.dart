@@ -16,8 +16,8 @@ class StyledFlatButton extends StatelessWidget {
         this.text!,
         style: Theme.of(context)
             .textTheme
-            .displayMedium!
-            .copyWith(color: Colors.white),
+            .displaySmall!
+            .copyWith(color: Colors.white, fontSize: 18),
       ),
       width: 196,
       height: 60,
